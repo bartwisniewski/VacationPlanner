@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--Register-->
+<div class="section">
+	    <div class="box">
+	<form method="POST">
+		{% csrf_token %}
+
+		<div class="field">
+			<label class="label">{{ form.username.label_tag }}</label>
+			<div class="control">{{ form.username }}</div>
+			{% if form.username.errors %}
+				<p class="help is-danger">{{ form.username.errors }}</p>
+			{% endif %}
+		</div>
+		<div class="field">
+			<label class="label">{{ form.password1.label_tag }}</label>
+			<div class="control">{{ form.password1 }}</div>
+			{% if form.password.errors %}
+				<p class="help is-danger">{{ form.password.errors }}</p>
+			{% endif %}
+		</div>
+		<div class="field">
+			<label class="label">{{ form.password2.label_tag }}</label>
+			<div class="control">{{ form.password2 }}</div>
+			{% if form.password2.errors %}
+				<p class="help is-danger">{{ form.password2.errors }}</p>
+			{% endif %}
+		</div>
+		<div class="field">
+			<label class="label">{{ form.email.label_tag }}</label>
+			<div class="control">{{ form.email }}</div>
+			{% if form.email.errors %}
+				<p class="help is-danger">{{ form.email.errors }}</p>
+			{% endif %}
+		</div>
+		<div class="control">
+			<button type="submit" class="button is-primary">Register</button>
+		</div>
+		{% if form.non_field_errors %}
+			<p class="help is-danger">{{ form.non_field_errors }}</p>
+		{% endif %}
+	</form>
+			</div>
+    <div class="buttons">
+      <p class="mr-1">If you already have an account: </p> <a class="is-link" href="{% url 'login' %}">Login</a>
+    </div>
+</div>
+
+{% endblock %}
