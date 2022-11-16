@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 
+{% block scripts %}
+      <script type='text/javascript'>
+      	let display_family = false;
+
+      	function toggle_family(){
+      		display_family = !display_family;
+      		document.getElementById("family_form").innerHTML = display_family ? "{{ family_form | escapejs  }}" : "";
+      		document.getElementById("toggle_family_button").innerHTML = display_family ? "family -" : "family +";
+      		}
+
+    </script>
+
+{% endblock %}
+
 {% block content %}
 
 <!--Register-->
@@ -8,15 +22,10 @@
 			<form action="{% url 'register' %}" method="post">
 				{% csrf_token %}
 				{{ user_form }}
-				{% if add_form %}
-					{{ add_form }}
-				{% else %}
+				<div id="family_form" class="mb-3"></div>
 				<div class="control">
-					<a class="is-link" href="{% url 'register' %}?family=True">
-						<button type="button" class="button is-small is-rounded">+</button><span class="ml-1">Family</span>
-					</a>
+					<button id="toggle_family_button" type="button" class="button is-small is-rounded" onclick="toggle_family()">Family +</button>
 				</div>
-				{% endif %}
 				<hr class="navbar-divider">
 				<div class="control">
 					<button type="submit" class="button is-small is-primary">Register</button>
