@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+My friends
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="box">
+        <h2>My friends:</h2>
+        <ul>
+            {% for friends in object_list %}
+                <li>{{ friends.nickname }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'friends-create' %}">+</a>
+    </div>
+</div>
+
+{% endblock %}
