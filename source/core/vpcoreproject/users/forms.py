@@ -3,7 +3,15 @@ from django.forms import ModelForm
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.utils.translation import gettext_lazy as _
-from users.models import FamilySize
+from users.models import FamilySize, MyUser
+
+
+class MyUserUpdateForm(ModelForm):
+    template_name = "users/register_form_snippet.html"
+
+    class Meta:
+        model = MyUser
+        fields = ['username', 'email']
 
 
 class MyUserCreationForm(UserCreationForm):

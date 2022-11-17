@@ -1,0 +1,24 @@
+<div class="box">
+	<form action="#" method="post">
+		{% csrf_token %}
+		{{ user_form }}
+		<div id="family_form" class="mb-3">
+			{% if display_family %}
+				{{ family_form }}
+			{% endif %}
+		</div>
+		<div class="control">
+			<button id="toggle_family_button" type="button" class="button is-small is-rounded" onclick="toggle_family()">
+				{% if display_family %}
+					Family -
+				{% else %}
+					Family +
+				{% endif %}
+			</button>
+		</div>
+		<hr class="navbar-divider">
+		<div class="control">
+			<button type="submit" class="button is-small is-primary">{{ submit_text }}</button>
+		</div>
+	</form>
+</div>

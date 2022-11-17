@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ObjectDoesNotExist
 # Create your models here.
 
 
@@ -9,7 +10,10 @@ class FamilySize(models.Model):
     infants = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"family contains, adults: {self.adults}, children: {self.children}, infants: {self.infants}"
+        try:
+            return f"Family of {self.myuser}. Adults: {self.adults}, children: {self.children}, infants: {self.infants}"
+        except ObjectDoesNotExist:
+            return f"Family contains of: adults: {self.adults}, children: {self.children}, infants: {self.infants}"
 
 
 class MyUser(AbstractUser):

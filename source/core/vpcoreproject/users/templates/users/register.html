@@ -1,41 +1,14 @@
 {% extends 'base.html' %}
 
 {% block scripts %}
-      <script type='text/javascript'>
-      	let display_family = false;
-
-      	function toggle_family(){
-      		display_family = !display_family;
-      		document.getElementById("family_form").innerHTML = display_family ? "{{ family_form | escapejs  }}" : "";
-      		document.getElementById("toggle_family_button").innerHTML = display_family ? "family -" : "family +";
-      		}
-
-    </script>
-
+	{% include 'users/user_form_script.html' %}
 {% endblock %}
 
 {% block content %}
-
-<!--Register-->
 <div class="section">
-	    <div class="box">
-			<form action="{% url 'register' %}" method="post">
-				{% csrf_token %}
-				{{ user_form }}
-				<div id="family_form" class="mb-3"></div>
-				<div class="control">
-					<button id="toggle_family_button" type="button" class="button is-small is-rounded" onclick="toggle_family()">Family +</button>
-				</div>
-				<hr class="navbar-divider">
-				<div class="control">
-					<button type="submit" class="button is-small is-primary">Register</button>
-				</div>
-			</form>
-
-			</div>
+	{% include 'users/user_form.html' with submit_text='Register' %}
     <div class="buttons">
       <p class="mr-1">If you already have an account: </p> <a class="is-link" href="{% url 'login' %}">Login</a>
     </div>
 </div>
-
 {% endblock %}

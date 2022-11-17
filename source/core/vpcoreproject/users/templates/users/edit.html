@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+	{% include 'users/user_form_script.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+	{% include 'users/user_form.html' with submit_text='Update' %}
+</div>
+{% endblock %}

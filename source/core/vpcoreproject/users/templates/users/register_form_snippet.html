@@ -3,7 +3,7 @@
 		<label class="label">{{ field.label_tag }}</label>
 		<div class="control">{{ field }}</div>
 		{% if field.errors %}
-			<p class="help is-danger">{{ field.errors }}</p>
+			<div class="help is-danger">{{ field.errors }}</div>
 		{% endif %}
 	</div>
 {% endfor %}
