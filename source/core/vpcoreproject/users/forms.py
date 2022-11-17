@@ -7,7 +7,7 @@ from users.models import FamilySize, MyUser
 
 
 class MyUserUpdateForm(ModelForm):
-    template_name = "users/register_form_snippet.html"
+    template_name = "users/form_snippet.html"
 
     class Meta:
         model = MyUser
@@ -15,7 +15,7 @@ class MyUserUpdateForm(ModelForm):
 
 
 class MyUserCreationForm(UserCreationForm):
-    template_name = "users/register_form_snippet.html"
+    template_name = "users/form_snippet.html"
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
@@ -29,7 +29,7 @@ class MyUserCreationForm(UserCreationForm):
 
 
 class FamilySizeForm(ModelForm):
-    template_name = "users/register_form_snippet.html"
+    template_name = "users/form_snippet.html"
 
     class Meta:
         model = FamilySize

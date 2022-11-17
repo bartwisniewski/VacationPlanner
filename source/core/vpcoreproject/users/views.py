@@ -39,59 +39,52 @@ def get_modelform_data_from_post(post: dict, form: type(ModelForm)) -> dict:
 # class UserRegisterEditMixin:
 #     self.user_form_class(instance = user)
 
-class UserEditView(View):
-    template_name = 'users/edit.html'
-    user_form_class = MyUserUpdateForm
-    family_form_class = FamilySizeForm
-    success_url = '/'
 
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        user_form = self.user_form_class(instance=user)
-        display_family = 1
-        try:
-            family = user.default_family
-        except ObjectDoesNotExist:
-            family = None
-            display_family = 0
-        family_form = self.family_form_class(instance=family)
-        data = {'user_form': user_form, 'family_form': family_form, 'display_family': display_family}
-        return render(request, self.template_name, data)
-
-    def post(self, request, *args, **kwargs):
-        print(request.POST)
-
-
-class RegisterView(View):
+class UserRegisterEdit(View):
     template_name = 'users/register.html'
     user_form_class = MyUserCreationForm
     family_form_class = FamilySizeForm
     success_url = '/'
 
-    def get(self, request, *args, **kwargs):
-        user_form = self.user_form_class()
-        family_form = self.family_form_class()
-        data = {'user_form': user_form, 'family_form': family_form, 'display_family': 0}
-        return render(request, self.template_name, data)
+    @staticmethod
+    def get_user(request):
+        if request.user.is_authenticated:
+            return request.user
+        else:
+            return None
 
-    def split_data(self, post: dict):
+    @staticmethod
+    def get_family(user):
+        if user:
+            try:
+                return user.default_family
+            except ObjectDoesNotExist:
+                pass
+        return None
+
+    def get_post_data(self, post):
         user_data = get_modelform_data_from_post(post=post, form=self.user_form_class)
         family_data = get_modelform_data_from_post(post=post, form=self.family_form_class)
         return user_data, family_data
 
-    def check_family(self, family_data: dict):
-        family_active = 1 if family_data else 0
-        if family_data:
-            family_form = self.family_form_class(family_data)
-        else:
-            family_form = self.family_form_class()
-        return family_form, family_active
+    def init_forms(self, request, user_post, family_post):
+        user = self.get_user(request=request)
+        user_form = self.user_form_class(user_post, instance=user)
+        family = self.get_family(user)
+        family_form = self.family_form_class(family_post, instance=family)
+        family_active = 1 if family else 0
+        return user_form, family_form, family_active
+
+    def get(self, request, *args, **kwargs):
+        print(request.user)
+        user_form, family_form, family_active = self.init_forms(request=request, user_post=None, family_post=None)
+        data = {'user_form': user_form, 'family_form': family_form, 'display_family': family_active}
+        return render(request, self.template_name, data)
 
     def post(self, request, *args, **kwargs):
-        user_data, family_data = self.split_data(post=request.POST)
-        user_form = self.user_form_class(user_data)
-        family_form, family_active = self.check_family(family_data=family_data)
+        user_post, family_post = self.get_post_data(post=request.POST)
+        user_form, family_form, family_active = self.init_forms(request=request, user_post=user_post,
+                                                                family_post=family_post)
 
         if (family_form.is_valid() or not family_active) and user_form.is_valid():
             user = user_form.save(commit=False)
@@ -104,3 +97,25 @@ class RegisterView(View):
         else:
             data = {'user_form': user_form, 'family_form': family_form, 'display_family': family_active}
             return render(request, self.template_name, data)
+
+
+class UserEditView(UserRegisterEdit):
+    template_name = 'users/edit.html'
+    user_form_class = MyUserUpdateForm
+    family_form_class = FamilySizeForm
+    success_url = '/user/edit'
+
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+class RegisterView(UserRegisterEdit):
+    template_name = 'users/register.html'
+    user_form_class = MyUserCreationForm
+    family_form_class = FamilySizeForm
+    success_url = '/'
