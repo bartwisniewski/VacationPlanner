@@ -72,7 +72,7 @@ class UserRegisterEdit(View):
         user_form = self.user_form_class(user_post, instance=user)
         family = self.get_family(user)
         family_form = self.family_form_class(family_post, instance=family)
-        family_active = 1 if family else 0
+        family_active = 1 if family or family_post else 0
         return user_form, family_form, family_active
 
     def get(self, request, *args, **kwargs):
@@ -83,9 +83,11 @@ class UserRegisterEdit(View):
 
     def post(self, request, *args, **kwargs):
         user_post, family_post = self.get_post_data(post=request.POST)
+        print(request.POST)
+        print(family_post)
         user_form, family_form, family_active = self.init_forms(request=request, user_post=user_post,
                                                                 family_post=family_post)
-
+        print(f"family acitve: {family_active}")
         if (family_form.is_valid() or not family_active) and user_form.is_valid():
             user = user_form.save(commit=False)
             if family_active:

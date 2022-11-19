@@ -8,7 +8,7 @@
 			{% endif %}
 		</div>
 		<div class="control">
-			<button id="toggle_family_button" type="button" class="button is-small is-rounded" onclick="toggle_family()">
+			<button id="toggle_family_button" type="button" class="button is-small is-rounded" onclick="toggle_family('{{ family_form | escapejs  }}')">
 				{% if display_family %}
 					Family -
 				{% else %}

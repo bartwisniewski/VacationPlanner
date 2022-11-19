@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-
+    {% load static %}
 {% block scripts %}
-	{% include 'users/user_form_script.html' %}
+    <script type='text/javascript' src="{% static 'scripts-register.js' %}"></script>
+    <script type='text/javascript'>display_family = "{{ display_family | escapejs }}";</script>
 {% endblock %}
-
+1
 {% block content %}
 <div class="section">
 	{% include 'users/user_form.html' with submit_text='Register' %}

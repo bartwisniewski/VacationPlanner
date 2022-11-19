@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
@@ -25,12 +26,13 @@ class MyFriendsListView(LoginRequiredMixin, ListView):
 class FriendsCreateView(CreateView):
     model = Friends
     fields = '__all__'
+    success_url = reverse_lazy('friends-list')
     # template = friends_form.html
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
         self.object = form.save()
-        UserToFriends(user=self.request.user, friends=self.object, admin=True, owner=True)
+        UserToFriends(user=self.request.user, friends=self.object, admin=True, owner=True).save()
         return HttpResponseRedirect(self.get_success_url())
 
 
