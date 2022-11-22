@@ -5,13 +5,35 @@ My friends
 {% block content %}
 <div class="section">
     <div class="box">
+        {% if exception %}
+            <p>{{ exception }}</p>
+        {% endif %}
         <h2>My friends:</h2>
         <ul>
             {% for friends in object_list %}
-                <li>{{ friends.nickname }}</li>
+                <li><span><a href="{% url 'friends-edit' friends.id %}">{{ friends.nickname }}</a></span><a href="{% url 'friends-delete' friends.id %}">x</a></li>
             {% endfor %}
         </ul>
         <a href="{% url 'friends-create' %}">+</a>
+        <a href="{% url 'friends-find' %}">find more</a>
+        {% if my_requests %}
+        <hr class="navbar-divider">
+        <h2>My requests:</h2>
+        <ul>
+            {% for request in my_requests %}
+                <li>{{request.friends}}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if other_requests %}
+        <hr class="navbar-divider">
+        <h2>Requests to my friends:</h2>
+        <ul>
+            {% for request in other_requests %}
+                <li>{{request.user}} wants to join {{request.friends}}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 </div>
 

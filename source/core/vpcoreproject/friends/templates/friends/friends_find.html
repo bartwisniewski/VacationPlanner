@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+Find new friends group
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="box">
+        <h2>Found friends:</h2>
+        <ul>
+            {% for friends in object_list %}
+                <li><a href="{% url 'create-join-request' friends.id %}">{{ friends.nickname }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

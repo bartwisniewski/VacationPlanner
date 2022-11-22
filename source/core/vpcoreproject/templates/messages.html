@@ -1,0 +1,13 @@
+{% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+        <li>
+            <article {% if message.tags %} class="message is-{{message.tags}}"{% endif %}>
+                <div class="message-header">
+                    <p>{{ message }}</p>
+                    <a href="{{ request.get_full_path }}"><button class="delete" aria-label="delete"></button></a>
+                </div>
+            </article>
+        </li>
+   {% endfor %}
+{% endif %}

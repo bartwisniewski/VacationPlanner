@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-    {% load static %}
+
 {% block scripts %}
-    <script type='text/javascript' src="{% static 'scripts-register.js' %}"></script>
-    <script type='text/javascript'>display_family = "{{ display_family | escapejs }}";</script>
+    {% include 'users/user_form_scripts.html' %}
 {% endblock %}
 
 {% block content %}
