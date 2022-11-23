@@ -30,7 +30,10 @@ My friends
         <h2>Requests to my friends:</h2>
         <ul>
             {% for request in other_requests %}
-                <li>{{request.user}} wants to join {{request.friends}}</li>
+                <li><span>{{request.user}} wants to join {{request.friends}}</span>
+                    <a href="{% url 'answer-join-request' request.id %}?accept=True">OK</a>
+                    <a href="{% url 'answer-join-request' request.id %}?accept=False">X</a>
+                </li>
             {% endfor %}
         </ul>
         {% endif %}

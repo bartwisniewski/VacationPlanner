@@ -11,4 +11,5 @@ urlpatterns = [
     path('member/<pk>/delete/', views.UserToFriendsDeleteView.as_view(), name="member-delete"),
     path('find', views.FriendsListView.as_view(), name="friends-find"),
     path('<pk>/join/', views.CreateJoinRequestView.as_view(), name="create-join-request"),
+    path('request/<pk>/answer', views.AnswerJoinRequestView.as_view(), name="answer-join-request"),
 ]
