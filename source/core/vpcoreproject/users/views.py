@@ -1,14 +1,17 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView, View
-from django.forms import ModelForm
+
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.core.exceptions import ObjectDoesNotExist
 
 from users.forms import MyUserCreationForm, MyUserUpdateForm, FamilySizeForm
+from users.helpers import get_modelform_data_from_post
 
 # Create your views here.
 
@@ -27,19 +30,6 @@ class DashboardView(TemplateView):
         return self.render_to_response(context)
 
 
-def get_modelform_data_from_post(post: dict, form: type(ModelForm)) -> dict:
-    return_dict = {}
-    temp_form_instance = form()
-    for field in temp_form_instance.fields:
-        if field in post.keys():
-            return_dict[field] = post.get(field, None)
-    return return_dict
-
-
-# class UserRegisterEditMixin:
-#     self.user_form_class(instance = user)
-
-
 class UserRegisterEdit(View):
     template_name = 'users/register.html'
     user_form_class = MyUserCreationForm
@@ -50,12 +40,12 @@ class UserRegisterEdit(View):
     def get_user(request):
         if request.user.is_authenticated:
             return request.user
-        else:
-            return None
+        return None
 
     @staticmethod
     def get_family(user):
         if user:
+            # sprawdzac w modelu user, dodatkowa funkcja
             try:
                 return user.default_family
             except ObjectDoesNotExist:
@@ -83,11 +73,8 @@ class UserRegisterEdit(View):
 
     def post(self, request, *args, **kwargs):
         user_post, family_post = self.get_post_data(post=request.POST)
-        print(request.POST)
-        print(family_post)
         user_form, family_form, family_active = self.init_forms(request=request, user_post=user_post,
                                                                 family_post=family_post)
-        print(f"family acitve: {family_active}")
         if (family_form.is_valid() or not family_active) and user_form.is_valid():
             user = user_form.save(commit=False)
             if family_active:
@@ -96,24 +83,16 @@ class UserRegisterEdit(View):
             user.save()
             login(request, user)
             return HttpResponseRedirect(self.success_url)
-        else:
-            data = {'user_form': user_form, 'family_form': family_form, 'display_family': family_active}
-            return render(request, self.template_name, data)
+
+        data = {'user_form': user_form, 'family_form': family_form, 'display_family': family_active}
+        return render(request, self.template_name, data)
 
 
-class UserEditView(UserRegisterEdit):
+class UserEditView(LoginRequiredMixin, UserRegisterEdit):
     template_name = 'users/edit.html'
     user_form_class = MyUserUpdateForm
     family_form_class = FamilySizeForm
     success_url = '/user/edit'
-
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
-    @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
 
 
 class RegisterView(UserRegisterEdit):

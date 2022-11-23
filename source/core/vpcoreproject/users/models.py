@@ -10,6 +10,8 @@ class FamilySize(models.Model):
     infants = models.IntegerField(default=0)
 
     def __str__(self):
+
+        # osobna funkcja sprawdzajaca relacje myuser, prwyatna __
         try:
             return f"Family of {self.myuser}. Adults: {self.adults}, children: {self.children}, infants: {self.infants}"
         except ObjectDoesNotExist:

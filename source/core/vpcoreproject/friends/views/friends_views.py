@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from friends.models import Friends, UserToFriends, JoinRequest
 
-
+# utworzyc paczke views, i podzielic x_views, z_views
 class FriendsListView(LoginRequiredMixin, ListView):
     template_name_suffix = '_find'
     model = Friends
@@ -68,6 +68,13 @@ class FriendsSingleObjectView(LoginRequiredMixin, UserPassesTestMixin):
         return HttpResponseRedirect(self.get_success_url())
 
 
+def owner_only(func):
+    def inner(self, *args, **kwargs):
+        if self.object.test_user_role(self.request.user, 'owner'):
+            func(self, *args, **kwargs)
+    return inner
+
+
 class FriendsUpdateView(FriendsSingleObjectView, UpdateView):
     model = Friends
     fields = '__all__'
@@ -80,6 +87,16 @@ class FriendsUpdateView(FriendsSingleObjectView, UpdateView):
         formset = self.object.get_users_formset()
         context['users_formset'] = formset
         return context
+
+    @owner_only
+    def update_members(self, request, *args, **kwargs):
+        count = int(request.POST.get('form-TOTAL_FORMS', 0))
+        post_data = request.POST
+        UserToFriends.update_members(count, post_data)
+
+    def post(self, request, *args, **kwargs):
+        self.update_members(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if self.object.test_user_role(self.request.user, 'owner'):
@@ -115,73 +132,7 @@ class UserToFriendsDeleteView(LoginRequiredMixin,  DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class CreateJoinRequestView(TemplateView):
-    success_url = reverse_lazy('friends-list')
-    template_name = "friends/request_confirm.html"
 
-    def get(self, request, *args, **kwargs):
-        friends_id = self.kwargs['pk']
-        try:
-            friends = Friends.objects.get(id=friends_id)
-            context = self.get_context_data(**kwargs)
-            context['friends'] = friends
-            return self.render_to_response(context)
-        except ObjectDoesNotExist:
-            messages.warning(self.request, f'Friends group with id {friends_id} does not exist')
-        return HttpResponseRedirect(self.success_url)
-
-    def post(self, request, *args, **kwargs):
-        friends_id = self.kwargs['pk']
-        try:
-            friends = Friends.objects.get(id=friends_id)
-            user = request.user
-            join_request, created = JoinRequest.objects.get_or_create(user=user, friends=friends)
-            if created:
-                messages.info(self.request, f'Join request created')
-            else:
-                messages.warning(self.request, f'You have already sent a request to join this group')
-        except ObjectDoesNotExist:
-            messages.warning(self.request, f'Friends group with id {friends_id } does not exist')
-
-        return HttpResponseRedirect(self.success_url)
-
-
-class AnswerJoinRequestView(TemplateView):
-    success_url = reverse_lazy('friends-list')
-    template_name = "friends/confirm.html"
-
-    def get_object(self):
-        request_id = self.kwargs['pk']
-        try:
-            return JoinRequest.objects.get(id=request_id)
-        except ObjectDoesNotExist:
-            messages.warning(self.request, f'Join request does not exist')
-            return None
-
-    def get(self, request, *args, **kwargs):
-        join_request = self.get_object()
-        if join_request:
-            accept = self.request.GET.get('accept', False)
-
-            context = self.get_context_data(**kwargs)
-            context['object'] = join_request
-            context['action'] = 'accept' if accept else 'reject'
-            return self.render_to_response(context)
-
-        return HttpResponseRedirect(self.success_url)
-
-    def post(self, request, *args, **kwargs):
-        join_request = self.get_object()
-        if join_request:
-            accept = self.request.GET.get('accept', False)
-            if accept:
-                UserToFriends(user=join_request.user, friends=join_request.friends).save()
-                messages.info(self.request, f'Join request accepted')
-            else:
-                messages.info(self.request, f'Join request rejected')
-            join_request.delete()
-
-        return HttpResponseRedirect(self.success_url)
 
 # My groups, group of user
 # - List of groups
