@@ -8,8 +8,9 @@ urlpatterns = [
     path('add', friends_views.FriendsCreateView.as_view(), name="friends-create"),
     path('<pk>/edit/', friends_views.FriendsUpdateView.as_view(), name="friends-edit"),
     path('<pk>/delete/', friends_views.FriendsDeleteView.as_view(), name="friends-delete"),
+    path('<pk>/leave/', friends_views.FriendsLeaveView.as_view(), name="friends-leave"),
     path('member/<pk>/delete/', friends_views.UserToFriendsDeleteView.as_view(), name="member-delete"),
-    path('find', friends_views.FriendsListView.as_view(), name="friends-find"),
+    path('find/', request_views.FriendsFindView.as_view(), name="friends-find"),
     path('<pk>/join/', request_views.CreateJoinRequestView.as_view(), name="create-join-request"),
     path('request/<pk>/answer', request_views.AnswerJoinRequestView.as_view(), name="answer-join-request"),
 ]

@@ -3,32 +3,18 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.core.exceptions import ObjectDoesNotExist
-# Create your views here.
 
 from friends.models import Friends, UserToFriends, JoinRequest
-
-# utworzyc paczke views, i podzielic x_views, z_views
-class FriendsListView(LoginRequiredMixin, ListView):
-    template_name_suffix = '_find'
-    model = Friends
-    paginate_by = 10  # if pagination is desired
-
-    def get_queryset(self):
-        phrase = self.request.GET.get('q', '')
-        queryset = Friends.objects.exclude(usertofriends__user=self.request.user).order_by('-id')
-        if len(phrase) >= 3:
-            queryset = queryset.filter(nickname__contains=phrase)
-        return queryset
+from friends.helpers import owner_only
 
 
 class MyFriendsListView(LoginRequiredMixin, ListView):
 
     model = Friends
-    paginate_by = 10  # if pagination is desired
+    paginate_by = 10
 
     def get_queryset(self):
         return Friends.objects.filter(usertofriends__user=self.request.user)
@@ -45,7 +31,6 @@ class FriendsCreateView(LoginRequiredMixin, CreateView):
     model = Friends
     fields = '__all__'
     success_url = reverse_lazy('friends-list')
-    # template = friends_form.html
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
@@ -66,13 +51,6 @@ class FriendsSingleObjectView(LoginRequiredMixin, UserPassesTestMixin):
     def handle_no_permission(self):
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(self.get_success_url())
-
-
-def owner_only(func):
-    def inner(self, *args, **kwargs):
-        if self.object.test_user_role(self.request.user, 'owner'):
-            func(self, *args, **kwargs)
-    return inner
 
 
 class FriendsUpdateView(FriendsSingleObjectView, UpdateView):
@@ -96,14 +74,6 @@ class FriendsUpdateView(FriendsSingleObjectView, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.update_members(request, *args, **kwargs)
-        return super().post(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        if self.object.test_user_role(self.request.user, 'owner'):
-            count = int(request.POST.get('form-TOTAL_FORMS', 0))
-            post_data = request.POST
-            UserToFriends.update_members(count, post_data)
-
         return super().post(request, *args, **kwargs)
 
 
@@ -132,6 +102,34 @@ class UserToFriendsDeleteView(LoginRequiredMixin,  DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+class FriendsLeaveView(LoginRequiredMixin, TemplateView):
+    success_url = reverse_lazy('friends-list')
+    template_name = "friends/confirm.html"
+
+    def get_object(self, request, *args, **kwargs):
+        friends_id = self.kwargs['pk']
+        friends = Friends.get_or_warning(id=friends_id, request=request)
+        if friends:
+            user = request.user
+            return UserToFriends.get_or_warning(user=user, friends=friends, request=request)
+        return None
+
+    def get(self, request, *args, **kwargs):
+        user_to_friends = self.get_object(request, *args, **kwargs)
+        if user_to_friends:
+            context = self.get_context_data(**kwargs)
+            context['object'] = user_to_friends.friends
+            context['action'] = 'leave'
+            return self.render_to_response(context)
+
+        return HttpResponseRedirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        user_to_friends = self.get_object(request, *args, **kwargs)
+        if user_to_friends:
+            user_to_friends.delete()
+            messages.info(self.request, f'You have left the group')
+        return HttpResponseRedirect(self.success_url)
 
 
 # My groups, group of user
