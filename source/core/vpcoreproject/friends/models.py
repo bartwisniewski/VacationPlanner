@@ -79,22 +79,6 @@ class UserToFriends(models.Model):
                 object_data[field[0]] = True
         return object_data
 
-    # Utworzyc pomocnicza klase i przeniesc metode, rozbic metode
-    @staticmethod
-    def update_members(count: int, post_data: dict):
-        members_count = count
-        for it in range(0, members_count):
-            member_data = UserToFriends.from_formset_data(post_data, it)
-            try:
-                member = UserToFriends.objects.get(pk=member_data.get('id'))
-            except ObjectDoesNotExist:
-                pass
-            else:
-                if not member.owner:
-                    member.admin = member_data.get('admin')
-                    member.owner = member_data.get('owner')
-                    member.save()
-
 
 class JoinRequest(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
