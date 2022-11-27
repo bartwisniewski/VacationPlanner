@@ -1,0 +1,56 @@
+from django.db import models
+from django.db.models import SET_NULL
+from django.utils.translation import gettext_lazy as _
+from users.models import FamilySize
+
+
+class Owner(models.Model):
+    name = models.CharField(max_length=30)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+
+
+class PlaceSize(models.Model):
+    bedrooms = models.IntegerField(default=1)
+    bathrooms = models.IntegerField(default=1)
+    living_rooms = models.IntegerField(default=0)
+    kitchens = models.IntegerField(default=0)
+
+
+class Place(models.Model):
+
+    class PlaceTypes(models.TextChoices):
+        HOTEL = 'HT', _('Hotel')
+        HOUSE = 'HS', _('House')
+        BUNGALOW = 'BG', _('Bungalow')
+        FLAT = 'FL', _('Flat')
+        AGRITOURISM = 'AG', _('Agritourism')
+        CAMPING = 'CA', _('Camping')
+        YACHT = 'YA', _('Yacht')
+
+    class PlaceRegion(models.TextChoices):
+        MOUNTAINS = 'MT', _('Mountains')
+        LAKE = 'LK', _('Lake')
+        SEA = 'SE', _('Sea')
+        WOOD = 'WD', _('Wood')
+        FIELDS = 'FL', _('Fields')
+        CITY = 'CT', _('City')
+
+    url = models.URLField()
+    description = models.TextField()
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=30)
+    owner = models.ForeignKey(Owner, on_delete=SET_NULL, null=True)
+    capacity = models.OneToOneField(FamilySize, on_delete=models.SET_NULL, null=True)
+    size = models.OneToOneField(PlaceSize, on_delete=models.SET_NULL, null=True)
+    type = models.CharField(
+        max_length=2,
+        choices=PlaceTypes.choices,
+        default=PlaceTypes.HOTEL,
+    )
+    region = models.CharField(
+        max_length=2,
+        choices=PlaceRegion.choices,
+        default=PlaceRegion.MOUNTAINS,
+    )

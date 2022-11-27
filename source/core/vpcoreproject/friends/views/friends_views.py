@@ -143,14 +143,3 @@ class FriendsLeaveView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     def handle_no_permission(self):
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(self.success_url)
-
-
-# My groups, group of user
-# - List of groups
-
-#   -> Leave group // not Owner
-
-# Delete group, post only // Owner
-
-# Find group
-# - Search bar
