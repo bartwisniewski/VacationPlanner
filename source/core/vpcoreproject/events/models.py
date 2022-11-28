@@ -16,7 +16,7 @@ class Event(models.Model):
 
     name = models.CharField(max_length=30)
     friends = models.ForeignKey(Friends, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=EventStatus.choices)
+    status = models.IntegerField(choices=EventStatus.choices, default=EventStatus.DATE_SELECTION)
     start = models.DateField()
     end = models.DateField()
     place = models.ForeignKey(Place, on_delete=models.SET_NULL, null=True)
@@ -24,6 +24,10 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    @staticmethod
+    def user_events(user: MyUser):
+        return Event.objects.filter(usertoevents__user=user)
 
 
 class UserToEvent(models.Model):
