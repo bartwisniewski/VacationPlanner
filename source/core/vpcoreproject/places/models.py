@@ -9,12 +9,18 @@ class Owner(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class PlaceSize(models.Model):
     bedrooms = models.IntegerField(default=1)
     bathrooms = models.IntegerField(default=1)
     living_rooms = models.IntegerField(default=0)
     kitchens = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"bd:{self.bedrooms}-bt:{self.bathrooms}-lv:{self.living_rooms}-kt:{self.kitchens}"
 
 
 class Place(models.Model):
@@ -36,6 +42,7 @@ class Place(models.Model):
         FIELDS = 'FL', _('Fields')
         CITY = 'CT', _('City')
 
+    name = models.CharField(max_length=30)
     url = models.URLField()
     description = models.TextField()
     address = models.CharField(max_length=255)
@@ -54,3 +61,6 @@ class Place(models.Model):
         choices=PlaceRegion.choices,
         default=PlaceRegion.MOUNTAINS,
     )
+
+    def __str__(self):
+        return f"{self.name}"
