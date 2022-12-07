@@ -7,7 +7,7 @@ Welcome page
     <div class="box">
       {% if user.is_authenticated %}
         <h1>Hi {{user.username}}</h1>
-        <h2>You’ve been with us since: {{joined}} </h2>
+        <h2>You’ve been there since: {{joined}} </h2>
       {% else %}
         <h1>Welcome stranger, please log in</h1>
       {% endif %}
