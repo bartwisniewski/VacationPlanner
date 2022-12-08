@@ -5,6 +5,7 @@ from friends.models import Friends, UserToFriends
 from places.models import Place
 from users.models import MyUser
 
+
 class Event(models.Model):
 
     class EventStatus(models.IntegerChoices):
@@ -17,8 +18,8 @@ class Event(models.Model):
     name = models.CharField(max_length=30)
     friends = models.ForeignKey(Friends, on_delete=models.CASCADE)
     status = models.IntegerField(choices=EventStatus.choices, default=EventStatus.DATE_SELECTION)
-    start = models.DateField()
-    end = models.DateField()
+    start = models.DateField(null=True)
+    end = models.DateField(null=True)
     place = models.ForeignKey(Place, on_delete=models.SET_NULL, null=True)
     promoter = models.ForeignKey(UserToFriends, on_delete=models.SET_NULL, null=True)
 
@@ -27,7 +28,7 @@ class Event(models.Model):
 
     @staticmethod
     def user_events(user: MyUser):
-        return Event.objects.filter(usertoevents__user=user)
+        return Event.objects.filter(usertoevent__user=user)
 
 
 class UserToEvent(models.Model):
