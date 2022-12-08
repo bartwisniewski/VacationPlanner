@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9, 3.10]
+        python-version: [3.8, 3.9, '3.10']
 
     steps:
     - uses: actions/checkout@v3
@@ -27,4 +27,4 @@ jobs:
         pip install -r source/core/requirements.txt
     - name: Run Tests
       run: |
-        python source/core/vpcoreproject/manage.py test
+        python source/core/vpcoreproject/manage.py test users.tests.views
