@@ -27,4 +27,4 @@ jobs:
         pip install -r source/core/requirements.txt
     - name: Run Tests
       run: |
-        python source/core/vpcoreproject/manage.py test
+        python source/core/vpcoreproject/manage.py test users.tests.views
