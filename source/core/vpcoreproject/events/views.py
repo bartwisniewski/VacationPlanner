@@ -21,6 +21,13 @@ class MyEventsListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Event.user_events(self.request.user).order_by('-id')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        my_events = Event.user_events(self.request.user)
+        my_friends_events = Event.user_friends_events(self.request.user)
+        context['friends_events'] = my_friends_events.difference(my_events).order_by('-id')
+        return context
+
 
 class MissingEventsListView(LoginRequiredMixin, ListView):
 
@@ -52,16 +59,30 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 
 class EventDetailView(DetailView):
-
+    template_suffix_from_status = ["_detail", "_detail_1", "_detail_2"]
     model = Event
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        # context['book_list'] = Book.objects.all()
-        return context
+    def get_template_from_status(self):
+        if 0 <= self.object.status <= len(EventDetailView.template_suffix_from_status):
+            self.template_name_suffix = self.template_suffix_from_status[self.object.status]
 
+    def get_context_0(self, context):
+        context['date_proposals'] = ['test_date']
+        # get  date proposals
+
+    def get_context_status(self, context):
+        context_status = [self.get_context_0]
+        if 0 <= self.object.status <= len(context_status):
+            context_status[self.object.status](context)
+
+    def get_context_data(self, **kwargs):
+
+        self.get_template_from_status()
+        context = super().get_context_data(**kwargs)
+        self.get_context_status(context)
+        context['status_display'] = self.object.get_status_display()
+        #
+        return context
 
 
 # class EventSingleObjectAdminView(LoginRequiredMixin, UserPassesTestMixin):

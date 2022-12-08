@@ -30,6 +30,10 @@ class Event(models.Model):
     def user_events(user: MyUser):
         return Event.objects.filter(usertoevent__user=user)
 
+    @staticmethod
+    def user_friends_events(user: MyUser):
+        return Event.objects.filter(friends__usertofriends__user=user)
+
 
 class UserToEvent(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)

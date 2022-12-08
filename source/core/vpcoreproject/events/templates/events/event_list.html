@@ -15,6 +15,15 @@ My events
             {% endfor %}
         </ul>
         <a href="{% url 'event-create' %}">+</a>
+        {% if friends_events %}
+            <hr class="navbar-divider">
+            <h2>Missing events:</h2>
+            <ul>
+                {% for event in friends_events %}
+                    <li><span class="mr-1">{{event.friends}}:</span><span>{{ event.name }}</span></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 </div>
 

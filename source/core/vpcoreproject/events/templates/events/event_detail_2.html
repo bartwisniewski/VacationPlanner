@@ -9,15 +9,9 @@ Event details
             <p>{{ exception }}</p>
         {% endif %}
         <h1>{{ object.name }}</h1>
-        <p>Status: {{ status_display }}</p>
-        {% if date_proposals %}
-            <p>Date proposals:</p>
-            <ul>
-                {% for date_proposal in date_proposals %}
-                    <li><span class="mr-1">{{date_proposal}}</span>VOTE</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        BOOKING
+        <p>{{ object.status }}</p>
+
         <a href="{% url 'events-list' %}"><</a>
     </div>
 </div>
