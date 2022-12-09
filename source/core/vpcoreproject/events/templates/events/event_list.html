@@ -11,7 +11,16 @@ My events
         <h2>My events:</h2>
         <ul>
             {% for event in object_list %}
-                <li><a href="{% url 'event-detail' event.id %}"><span class="mr-1">{{event.friends}}:</span><span>{{ event.name }}</span></a></li>
+                <li><span>
+                        <a href="{% url 'event-detail' event.id %}">
+                            <span class="mr-1">{{event.friends}}:</span>
+                            <span>{{ event.name }}</span>
+                        </a>
+                    </span>
+                    <span>
+                        <a href="{% url 'event-edit' event.id %}">EDIT</a>
+                    </span>
+                </li>
             {% endfor %}
         </ul>
         <a href="{% url 'event-create' %}">+</a>
@@ -20,7 +29,10 @@ My events
             <h2>Missing events:</h2>
             <ul>
                 {% for event in friends_events %}
-                    <li><span class="mr-1">{{event.friends}}:</span><span>{{ event.name }}</span></li>
+                    <li>
+                        <span class="mr-1">{{event.friends}}:</span><span>{{ event.name }}</span>
+                        <span><a href="{% url 'event-join' event.id %}">JOIN</a></span>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

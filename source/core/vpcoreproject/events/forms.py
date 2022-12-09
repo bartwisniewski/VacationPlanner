@@ -1,9 +1,18 @@
 from django import forms
+from django.forms import ModelForm
+
+from events.models import DateProposal
 
 
-class UserEventsRoleForm(forms.Form):
-    template_name = "friends/friends_users_form_snippet.html"
-    id = forms.IntegerField(required=False)
-    username = forms.CharField(required=False)
-    admin = forms.BooleanField(required=False)
-    owner = forms.BooleanField(required=False)
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class DateProposalForm(ModelForm):
+
+    class Meta:
+        model = DateProposal
+        fields = ['start', 'end']
+        widgets = {
+            'start': DateInput(), 'end': DateInput()
+        }

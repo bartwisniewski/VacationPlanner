@@ -8,7 +8,8 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from friends.models import Friends, UserToFriends, JoinRequest
-from friends.helpers import owner_only, UserToFriendsUpdateManager
+from friends.helpers import UserToFriendsUpdateManager
+from members.helpers import SingleObjectUserRoleRequiredView, owner_only
 
 
 class MyFriendsListView(LoginRequiredMixin, ListView):
@@ -39,24 +40,27 @@ class FriendsCreateView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class FriendsSingleObjectView(LoginRequiredMixin, UserPassesTestMixin):
-    success_url = reverse_lazy('friends-list')
-    permission_role = 'admin'
-    permission_denied_message = f'you are not {permission_role} of this group of friends'
+# class FriendsSingleObjectView(LoginRequiredMixin, UserPassesTestMixin):
+#     success_url = reverse_lazy('friends-list')
+#     permission_role = 'admin'
+#     permission_denied_message = f'you are not {permission_role} of this group of friends'
+#
+#     def test_func(self):
+#         self.object = self.get_object()
+#         return self.object.test_user_role(self.request.user, self.permission_role)
+#
+#     def handle_no_permission(self):
+#         messages.warning(self.request, self.permission_denied_message)
+#         return HttpResponseRedirect(self.get_success_url())
 
-    def test_func(self):
-        self.object = self.get_object()
-        return self.object.test_user_role(self.request.user, self.permission_role)
 
-    def handle_no_permission(self):
-        messages.warning(self.request, self.permission_denied_message)
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class FriendsUpdateView(FriendsSingleObjectView, UpdateView):
+class FriendsUpdateView(SingleObjectUserRoleRequiredView, UpdateView):
     model = Friends
     fields = '__all__'
     template_name_suffix = '_update_form'
+    success_url = reverse_lazy('friends-list')
+    permission_role = 'admin'
+    permission_denied_message = f'you are not {permission_role} of this group of friends'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,10 +81,11 @@ class FriendsUpdateView(FriendsSingleObjectView, UpdateView):
         return super().post(request, *args, **kwargs)
 
 
-class FriendsDeleteView(FriendsSingleObjectView,  DeleteView):
+class FriendsDeleteView(SingleObjectUserRoleRequiredView, DeleteView):
     model = Friends
     permission_role = 'owner'
     permission_denied_message = f'you are not {permission_role} of this group of friends'
+    success_url = reverse_lazy('friends-list')
 
 
 class UserToFriendsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):

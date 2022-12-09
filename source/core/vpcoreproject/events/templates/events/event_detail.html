@@ -14,10 +14,21 @@ Event details
             <p>Date proposals:</p>
             <ul>
                 {% for date_proposal in date_proposals %}
-                    <li><span class="mr-1">{{date_proposal}}</span>VOTE</li>
+                    <li>
+                        <span class="mr-1">{{date_proposal.start}}</span>-
+                        <span class="mr-1">{{date_proposal.end}}</span>
+                        // <span class="mr-1">{{date_proposal.user_event.user}}</span>
+                        {% if date_proposal.user_event.user == user %}
+                        x
+                        {% else %}
+                        VOTE
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}
+        <a href="{% url 'event-date-propose' object.id %}">Propose</a>
+        <hr class="navbar-divider">
         <a href="{% url 'events-list' %}"><</a>
     </div>
 </div>

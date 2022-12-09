@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <h2>Pariticipants:</h2>
+        {{ users_formset }}
+        <input type="submit" value="Save">
+    </form>
+
+
+
+</div>
+{% endblock %}

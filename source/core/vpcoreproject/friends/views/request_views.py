@@ -46,23 +46,17 @@ class CreateJoinRequestView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         friends_id = self.kwargs['pk']
-        try:
-            friends = Friends.objects.get(id=friends_id)
+        friends = Friends.get_or_warning(friends_id, request)
+        if friends:
             context = self.get_context_data(**kwargs)
             context['friends'] = friends
             return self.render_to_response(context)
-        except ObjectDoesNotExist:
-            messages.warning(self.request, f'Friends group with id {friends_id} does not exist')
         return HttpResponseRedirect(self.success_url)
 
     def post(self, request, *args, **kwargs):
         friends_id = self.kwargs['pk']
-        # przejrzec wszystkie try'e
-        try:
-            friends = Friends.objects.get(id=friends_id)
-        except ObjectDoesNotExist:
-            messages.warning(self.request, f'Friends group with id {friends_id } does not exist')
-        else:
+        friends = Friends.get_or_warning(friends_id, request)
+        if friends:
             user = request.user
             join_request, created = JoinRequest.objects.get_or_create(user=user, friends=friends)
             if created:
