@@ -19,7 +19,7 @@ Event details
                         <span class="mr-1">{{date_proposal.end}}</span>
                         // <span class="mr-1">{{date_proposal.user_event.user}}</span>
                         {% if date_proposal.user_event.user == user %}
-                        x
+                        <a href="{% url 'date-propose-delete' date_proposal.id %}">X</a>
                         {% else %}
                         VOTE
                         {% endif %}

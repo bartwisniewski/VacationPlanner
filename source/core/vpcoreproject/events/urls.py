@@ -12,5 +12,6 @@ urlpatterns = [
     path('member/<pk>/delete/', event_manipulate_views.UserToEventDeleteView.as_view(), name="event-member-delete"),
     path('<pk>/join/', join_leave_views.JoinView.as_view(), name="event-join"),
     path('<pk>/leave/', join_leave_views.LeaveView.as_view(), name="event-leave"),
-    path('<pk>/date/propose/', date_proposal_views.DateProposalCreateView.as_view(), name="event-date-propose"),
+    path('<pk>/date-propose/add/', date_proposal_views.DateProposalCreateView.as_view(), name="event-date-propose"),
+    path('date-propose/<pk>/delete/', date_proposal_views.DateProposalDeleteView.as_view(), name="date-propose-delete"),
 ]
