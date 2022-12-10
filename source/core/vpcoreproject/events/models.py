@@ -3,12 +3,14 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import formset_factory
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from friends.models import Friends, UserToFriends
 from places.models import Place
-from users.models import MyUser
 from events.forms_for_models import UserEventsRoleForm
 from members.models import Member
+
+UserModel = get_user_model()
 
 
 class Event(models.Model):
@@ -40,11 +42,11 @@ class Event(models.Model):
         return None
 
     @staticmethod
-    def user_events(user: MyUser):
+    def user_events(user: UserModel):
         return Event.objects.filter(usertoevent__user=user)
 
     @staticmethod
-    def user_friends_events(user: MyUser):
+    def user_friends_events(user: UserModel):
         return Event.objects.filter(friends__usertofriends__user=user)
 
     def test_user_role(self, user, role):
@@ -99,7 +101,34 @@ class DateProposal(models.Model):
     end = models.DateField()
 
     def __str__(self):
-        return f"{self.start}-{self.end}"
+        return f"{self.start} - {self.end}"
+
+    @staticmethod
+    def get_or_warning(id, request):
+        try:
+            return DateProposal.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f'Date proposal with id {id} does not exist')
+        return None
+
+
+class DateProposalVote(models.Model):
+    proposal = models.ForeignKey(DateProposal, on_delete=models.CASCADE)
+    voting = models.ForeignKey(UserToEvent, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.proposal.start} - {self.proposal.end}"
+
+    class Meta:
+        unique_together = ('proposal', 'voting')
+
+    @staticmethod
+    def get_or_warning(id, request):
+        try:
+            return DateProposalVote.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f'Date proposal vote with id {id} does not exist')
+        return None
 
 
 class PlaceProposal(models.Model):
@@ -108,3 +137,5 @@ class PlaceProposal(models.Model):
 
     def __str__(self):
         return f"{self.place.name}"
+
+

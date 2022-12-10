@@ -1,11 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import View
 from django.views.generic.edit import CreateView, DeleteView
-from django.core.exceptions import ObjectDoesNotExist
 
-from events.models import DateProposal, Event, UserToEvent
+
+from events.models import DateProposal, DateProposalVote, Event, UserToEvent
 from events.forms import DateProposalForm
 
 
@@ -81,3 +83,80 @@ class DateProposalDeleteView(UserPassesTestMixin, DeleteView):
         redirect_url = self.get_success_url()
         return HttpResponseRedirect(redirect_url)
 
+
+class DateProposalVoteView(LoginRequiredMixin, View):
+
+    def __init__(self, *args, **kwargs):
+        self.object = None
+        super().__init__(*args, **kwargs)
+
+    def get_object(self):
+        date_proposal_id = self.kwargs['pk']
+        date_proposal = DateProposal.get_or_warning(date_proposal_id, self.request)
+        self.object = date_proposal
+
+    def get_target_url(self):
+        if self.object:
+            event = self.object.user_event.event
+            return reverse('event-detail', kwargs={'pk': event.id})
+        return reverse('event-list')
+
+    def post(self, request, *args, **kwargs):
+        self.get_object()
+        target_url = self.get_target_url()
+
+        if not self.object:
+            return HttpResponseRedirect(target_url)
+
+        user = request.user
+        event = self.object.user_event.event
+        user_to_event = UserToEvent.get_or_warning(user, event, request)
+
+        if not user_to_event:
+            return HttpResponseRedirect(target_url)
+
+        proposal = self.object
+        date_proposal_vote, created = DateProposalVote.objects.get_or_create(proposal=proposal, voting=user_to_event)
+        if created:
+            messages.info(self.request, f'You have successfully voted on: {proposal}')
+        else:
+            messages.warning(self.request, f'You have already voted on: {proposal}')
+
+        return HttpResponseRedirect(target_url)
+
+
+class DateProposalUnvoteView(LoginRequiredMixin, View):
+
+    def __init__(self, *args, **kwargs):
+        self.object = None
+        super().__init__(*args, **kwargs)
+
+    def get_object(self):
+        date_proposal_vote_id = self.kwargs['pk']
+        date_proposal_vote = DateProposalVote.get_or_warning(date_proposal_vote_id, self.request)
+        self.object = date_proposal_vote
+
+    def get_target_url(self):
+        if self.object:
+            event = self.object.proposal.user_event.event
+            return reverse('event-detail', kwargs={'pk': event.id})
+        return reverse('event-list')
+
+    def test_func(self, request):
+        return request.user == self.object.voting.user
+
+    def post(self, request, *args, **kwargs):
+        self.get_object()
+        target_url = self.get_target_url()
+
+        if not self.object:
+            return HttpResponseRedirect(target_url)
+
+        if not self.test_func(request):
+            messages.warning(request, f'You can only unvote your own votes')
+            return HttpResponseRedirect(target_url)
+
+        proposal_string = str(self.object)
+        self.object.delete()
+        messages.info(request, f'You have successfully unvoted: {proposal_string}')
+        return HttpResponseRedirect(target_url)

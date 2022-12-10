@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
-from events.models import Event, UserToEvent, DateProposal
+from events.models import Event, UserToEvent, DateProposal, DateProposalVote
 
 
 class EventDetailView(UserPassesTestMixin, DetailView):
@@ -31,7 +31,12 @@ class EventDetailView(UserPassesTestMixin, DetailView):
 
     def get_context_0(self, context):
         proposals = DateProposal.objects.filter(user_event__event=self.object)
+        event_votes = DateProposalVote.objects.filter(proposal__in=proposals)
+        print(event_votes)
+        my_votes = event_votes.filter(voting__user=self.request.user)
+        print(my_votes)
         context['date_proposals'] = proposals
+        context['my_votes'] = my_votes
 
     def get_context_status(self, context):
         context_status = [self.get_context_0]

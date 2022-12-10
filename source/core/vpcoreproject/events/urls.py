@@ -14,4 +14,6 @@ urlpatterns = [
     path('<pk>/leave/', join_leave_views.LeaveView.as_view(), name="event-leave"),
     path('<pk>/date-propose/add/', date_proposal_views.DateProposalCreateView.as_view(), name="event-date-propose"),
     path('date-propose/<pk>/delete/', date_proposal_views.DateProposalDeleteView.as_view(), name="date-propose-delete"),
+    path('date-propose/<pk>/vote/', date_proposal_views.DateProposalVoteView.as_view(), name="date-propose-vote"),
+    path('date-propose/<pk>/unvote/', date_proposal_views.DateProposalUnvoteView.as_view(), name="date-propose-unvote"),
 ]
