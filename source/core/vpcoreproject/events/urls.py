@@ -16,4 +16,5 @@ urlpatterns = [
     path('date-propose/<pk>/delete/', date_proposal_views.DateProposalDeleteView.as_view(), name="date-propose-delete"),
     path('date-propose/<pk>/vote/', date_proposal_views.DateProposalVoteView.as_view(), name="date-propose-vote"),
     path('date-propose/<pk>/unvote/', date_proposal_views.DateProposalUnvoteView.as_view(), name="date-propose-unvote"),
+    path('date-propose/<pk>/accept/', date_proposal_views.DateProposalAcceptView.as_view(), name="date-propose-accept"),
 ]

@@ -6,10 +6,8 @@
 {% block content %}
 <div class="section">
     <form method="post">{% csrf_token %}
-        <p>Are you sure you want to remove date proposal: "{{ object }}"?</p>
-        {{ form }}
+        <p>Are you sure you want to accept "{{ date_proposal }}"?</p>
         <input type="submit" value="Confirm">
     </form>
-    <a href="{% url 'event-detail' object.user_event.event.id %}">cancel</a>
 </div>
 {% endblock %}

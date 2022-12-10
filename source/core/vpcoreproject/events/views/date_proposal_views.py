@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.views.generic.edit import CreateView, DeleteView
 
 
@@ -159,4 +159,57 @@ class DateProposalUnvoteView(LoginRequiredMixin, View):
         proposal_string = str(self.object)
         self.object.delete()
         messages.info(request, f'You have successfully unvoted: {proposal_string}')
+        return HttpResponseRedirect(target_url)
+
+
+class DateProposalAcceptView(UserPassesTestMixin, TemplateView):
+    template_name = "events/date_proposal_accept_confirm.html"
+    permission_role = 'admin'
+    permission_denied_message = f'you are not {permission_role} of this event'
+
+    def __init__(self, *args, **kwargs):
+        self.object = None
+        super().__init__(*args, **kwargs)
+
+    def get_object(self):
+        date_proposal_id = self.kwargs['pk']
+        date_proposal = DateProposal.get_or_warning(date_proposal_id, self.request)
+        self.object = date_proposal
+
+    def get_target_url(self):
+        if self.object:
+            event = self.object.user_event.event
+            return reverse('event-detail', kwargs={'pk': event.id})
+        return reverse('event-list')
+
+    def test_func(self):
+        self.get_object()
+        event = self.object.user_event.event
+        return event.test_user_role(self.request.user, DateProposalAcceptView.permission_role)
+
+    def handle_no_permission(self):
+        messages.warning(self.request, self.permission_denied_message)
+        return HttpResponseRedirect(self.get_target_url())
+
+    def get(self, request, *args, **kwargs):
+        self.get_object()
+        if self.object:
+            context = self.get_context_data(**kwargs)
+            context['date_proposal'] = self.object
+            return self.render_to_response(context)
+
+        return HttpResponseRedirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        self.get_object()
+        target_url = self.get_target_url()
+        if not self.object:
+            return HttpResponseRedirect(target_url)
+
+        event = self.object.user_event.event
+        event.start = self.object.start
+        event.end = self.object.end
+        event.status = Event.EventStatus.PLACE_SELECTION
+        event.save()
+
         return HttpResponseRedirect(target_url)

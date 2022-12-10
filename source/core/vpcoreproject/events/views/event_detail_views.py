@@ -31,7 +31,8 @@ class EventDetailView(UserPassesTestMixin, DetailView):
             self.template_name_suffix = self.template_suffix_from_status[self.object.status]
 
     def get_context_0(self, context):
-        proposals = DateProposal.objects.filter(user_event__event=self.object).annotate(Count('dateproposalvote'))
+        proposals = DateProposal.objects.filter(user_event__event=self.object).annotate(Count('dateproposalvote'))\
+            .order_by('-dateproposalvote__count')
         event_votes = DateProposalVote.objects.filter(proposal__in=proposals)
         my_votes = event_votes.filter(voting__user=self.request.user)
         my_voted = proposals.filter(dateproposalvote__voting__user=self.request.user)
@@ -47,8 +48,11 @@ class EventDetailView(UserPassesTestMixin, DetailView):
         context['my_votes'] = my_votes
         context['my_voted'] = my_voted
 
+    def get_context_1(self, context):
+        pass
+
     def get_context_status(self, context):
-        context_status = [self.get_context_0]
+        context_status = [self.get_context_0, self.get_context_1]
         if 0 <= self.object.status <= len(context_status):
             context_status[self.object.status](context)
 
