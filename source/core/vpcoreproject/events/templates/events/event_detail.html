@@ -17,12 +17,13 @@ Event details
                     <li>
                         <span class="mr-1">{{date_proposal}}</span>-
                         // <span class="mr-1">{{date_proposal.user_event.user}}</span>
+                        <span class="mr-1">{{date_proposal.dateproposalvote__count}}</span>
                         {% if date_proposal.user_event.user == user %}
                             <a href="{% url 'date-propose-delete' date_proposal.id %}">X</a>
-                        {% else %}
-                        <form method="post" action="{% url 'date-propose-vote' date_proposal.id %}">{% csrf_token %}
+                        {% elif not date_proposal.i_voted %}
+                        <form method="post" action="{% url 'date-propose-vote' date_proposal.id %}" style="display: inline-block">{% csrf_token %}
                                  <div class="control">
-                                    <button class="button is-info" type="submit">VOTE</button>
+                                    <button type="submit">VOTE</button>
                                  </div>
                         </form>
                         {% endif %}
@@ -34,8 +35,8 @@ Event details
                     {% for vote in my_votes %}
                         <li>
                             <span class="mr-1">{{vote}}</span>-
-                            <form method="post" action="{% url 'date-propose-unvote' vote.id %}">{% csrf_token %}
-                                    <button class="button is-info" type="submit">UNVOTE</button>
+                            <form method="post" action="{% url 'date-propose-unvote' vote.id %}" style="display: inline-block">{% csrf_token %}
+                                    <button type="submit">UNVOTE</button>
                             </form>
                         </li>
                     {% endfor %}

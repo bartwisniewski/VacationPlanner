@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.db.models import Count, Case, Value, BooleanField, When
 
 from events.models import Event, UserToEvent, DateProposal, DateProposalVote
 
@@ -30,13 +31,21 @@ class EventDetailView(UserPassesTestMixin, DetailView):
             self.template_name_suffix = self.template_suffix_from_status[self.object.status]
 
     def get_context_0(self, context):
-        proposals = DateProposal.objects.filter(user_event__event=self.object)
+        proposals = DateProposal.objects.filter(user_event__event=self.object).annotate(Count('dateproposalvote'))
         event_votes = DateProposalVote.objects.filter(proposal__in=proposals)
-        print(event_votes)
         my_votes = event_votes.filter(voting__user=self.request.user)
-        print(my_votes)
+        my_voted = proposals.filter(dateproposalvote__voting__user=self.request.user)
+        proposals = proposals.annotate(
+            i_voted=Case(
+                When(id__in=my_voted, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField()
+            )
+        )
+
         context['date_proposals'] = proposals
         context['my_votes'] = my_votes
+        context['my_voted'] = my_voted
 
     def get_context_status(self, context):
         context_status = [self.get_context_0]
