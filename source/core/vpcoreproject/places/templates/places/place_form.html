@@ -7,7 +7,7 @@
 <div class="section">
     {{event}}
     <form method="post">{% csrf_token %}
-        {{ form.as_p }}
+        {{ form }}
         <input type="submit" value="Save">
     </form>
     {% if request.GET.event %}

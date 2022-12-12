@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+My events
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="box">
+        {% if exception %}
+            <p>{{ exception }}</p>
+        {% endif %}
+        <h2>My places:</h2>
+        <ul>
+            {% for place in object_list %}
+                <span>{{ place }}</span>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'place-create' %}">+</a>
+    </div>
+</div>
+
+{% endblock %}

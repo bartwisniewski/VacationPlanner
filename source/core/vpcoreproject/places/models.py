@@ -68,3 +68,7 @@ class Place(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    @staticmethod
+    def user_places(user: UserModel):
+        return Place.objects.filter(created_by=user)
