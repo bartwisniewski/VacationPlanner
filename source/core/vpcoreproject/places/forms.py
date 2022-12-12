@@ -1,17 +1,15 @@
 from django import forms
 from django.forms import ModelForm
 
-from events.models import DateProposal, PlaceProposal
+from places.models import Place
 
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
+class PlaceForm(ModelForm):
 
-
-class DateProposalForm(ModelForm):
+    owner = forms.ImageField()
 
     class Meta:
-        model = DateProposal
+        model = Place
         fields = ['start', 'end']
         widgets = {
             'start': DateInput(), 'end': DateInput()

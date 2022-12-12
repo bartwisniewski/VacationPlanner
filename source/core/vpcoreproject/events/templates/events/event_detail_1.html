@@ -12,6 +12,8 @@ Event details
         <h2>{{object.start}}-{{object.end}}</h2>
         <p>Status: {{ status_display }}</p>
         <hr class="navbar-divider">
+        <a href="{% url 'event-place-propose' object.id %}">Propose new place</a>
+        <hr class="navbar-divider">
         <a href="{% url 'events-list' %}"><</a>
     </div>
 </div>

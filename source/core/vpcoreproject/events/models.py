@@ -139,3 +139,20 @@ class PlaceProposal(models.Model):
         return f"{self.place.name}"
 
 
+class PlaceProposalVote(models.Model):
+    proposal = models.ForeignKey(PlaceProposal, on_delete=models.CASCADE)
+    voting = models.ForeignKey(UserToEvent, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.proposal.place}"
+
+    class Meta:
+        unique_together = ('proposal', 'voting')
+
+    @staticmethod
+    def get_or_warning(id, request):
+        try:
+            return PlaceProposalVote.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f'Place proposal vote with id {id} does not exist')
+        return None

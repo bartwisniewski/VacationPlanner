@@ -2,6 +2,9 @@ from django.db import models
 from django.db.models import SET_NULL
 from django.utils.translation import gettext_lazy as _
 from users.models import FamilySize
+from django.contrib.auth import get_user_model
+
+UserModel = get_user_model()
 
 
 class Owner(models.Model):
@@ -61,6 +64,7 @@ class Place(models.Model):
         choices=PlaceRegion.choices,
         default=PlaceRegion.MOUNTAINS,
     )
+    created_by = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.name}"

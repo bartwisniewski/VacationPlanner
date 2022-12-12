@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    {{event}}
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+    {% if request.GET.event %}
+        <a href="{% url 'event-detail' event.id %}"><</a>
+    {% endif %}
+</div>
+{% endblock %}

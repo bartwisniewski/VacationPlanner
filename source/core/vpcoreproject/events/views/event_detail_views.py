@@ -10,7 +10,7 @@ from events.models import Event, UserToEvent, DateProposal, DateProposalVote
 
 class EventDetailView(UserPassesTestMixin, DetailView):
     model = Event
-    template_suffix_from_status = ["_detail", "_detail_1", "_detail_2"]
+    template_suffix_from_status = ["_detail_0", "_detail_1", "_detail_2"]
     success_url = reverse_lazy('events-list')
     permission_denied_message = f'you are not participant of this event'
 
