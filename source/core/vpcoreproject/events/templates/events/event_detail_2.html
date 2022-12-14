@@ -8,9 +8,10 @@ Event details
         {% if exception %}
             <p>{{ exception }}</p>
         {% endif %}
-        <h1>{{ object.name }}</h1>
-        BOOKING
-        <p>{{ object.status }}</p>
+        <h1 class="title">{{ object.name }}</h1>
+        <h2>{{object.start}}-{{object.end}}</h2>
+        <h2>{{object.place}}</h2>
+        <p>Status: {{ status_display }}</p>
 
         <a href="{% url 'events-list' %}"><</a>
     </div>

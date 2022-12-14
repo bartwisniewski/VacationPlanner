@@ -72,3 +72,9 @@ class Place(models.Model):
     @staticmethod
     def user_places(user: UserModel):
         return Place.objects.filter(created_by=user)
+
+    def delete(self, *args, **kwargs):
+        self.owner.delete(*args, **kwargs)
+        self.capacity.delete(*args, **kwargs)
+        self.size.delete(*args, **kwargs)
+        super().delete(*args, **kwargs)

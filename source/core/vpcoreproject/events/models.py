@@ -138,6 +138,14 @@ class PlaceProposal(models.Model):
     def __str__(self):
         return f"{self.place.name}"
 
+    @staticmethod
+    def get_or_warning(id, request):
+        try:
+            return PlaceProposal.objects.get(id=id)
+        except ObjectDoesNotExist:
+            messages.warning(request, f'Place proposal with id {id} does not exist')
+        return None
+
 
 class PlaceProposalVote(models.Model):
     proposal = models.ForeignKey(PlaceProposal, on_delete=models.CASCADE)

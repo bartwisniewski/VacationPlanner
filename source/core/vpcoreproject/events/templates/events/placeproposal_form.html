@@ -10,6 +10,8 @@
         {{ form.as_p }}
         <input type="submit" value="Save">
     </form>
-    <a href="{% url 'event-detail' event.id %}"><</a>
+    <p><a href="{% url 'place-create' %}?event={{event.id}}">create new</a></p>
+    <p><a href="{% url 'event-detail' event.id %}">back</a></p>
+
 </div>
 {% endblock %}

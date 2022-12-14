@@ -11,7 +11,7 @@
         <input type="submit" value="Save">
     </form>
     {% if request.GET.event %}
-        <a href="{% url 'event-detail' event.id %}"><</a>
+        <a href="{% url 'event-detail' request.GET.event %}"><</a>
     {% endif %}
 </div>
 {% endblock %}

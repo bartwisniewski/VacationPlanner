@@ -11,7 +11,9 @@ My events
         <h2>My places:</h2>
         <ul>
             {% for place in object_list %}
-                <span>{{ place }}</span>
+            <li>
+                <span>{{ place }}</span><a href="{% url 'place-delete' place.id %}">X</a>
+            </li>
             {% endfor %}
         </ul>
         <a href="{% url 'place-create' %}">+</a>

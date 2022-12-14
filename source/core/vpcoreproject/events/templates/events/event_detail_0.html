@@ -11,32 +11,33 @@ Event details
         <h1 class="title">{{ object.name }}</h1>
         <p>Status: {{ status_display }}</p>
         <hr class="navbar-divider">
-        {% if date_proposals %}
+        {% if proposals %}
             <p>Date proposals:</p>
             <ul>
-                {% for date_proposal in date_proposals %}
+                {% for proposal in proposals %}
                     <li>
-                        <span class="mr-1">{{date_proposal}}</span>
-                        by <span class="mr-1">{{date_proposal.user_event.user}}</span>
-                        votes: <span class="mr-1">{{date_proposal.dateproposalvote__count}}</span>
-                        {% if date_proposal.user_event.user == user %}
-                            <a href="{% url 'date-propose-delete' date_proposal.id %}">Remove my proposal</a>
-                        {% elif not date_proposal.i_voted %}
-                        <form method="post" action="{% url 'date-propose-vote' date_proposal.id %}" style="display: inline-block">{% csrf_token %}
+                        <span class="mr-1">{{proposal}}</span>
+                        by <span class="mr-1">{{proposal.user_event.user}}</span>
+                        votes: <span class="mr-1">{{proposal.dateproposalvote__count}}</span>
+                        {% if proposal.user_event.user == user %}
+                            <a href="{% url 'date-propose-delete' proposal.id %}">Remove my proposal</a>
+                        {% elif not proposal.i_voted %}
+                        <form method="post" action="{% url 'date-propose-vote' proposal.id %}" style="display: inline-block">{% csrf_token %}
                                  <div class="control">
                                     <button type="submit">VOTE</button>
                                  </div>
                         </form>
                         {% endif %}
-                        <a href="{% url 'date-propose-accept' date_proposal.id %}">SELECT THIS PROPOSAL</a>
+                        <a href="{% url 'date-propose-accept' proposal.id %}">SELECT THIS PROPOSAL</a>
                     </li>
                 {% endfor %}
             </ul>
         {% endif %}
                 <hr class="navbar-divider">
         <a href="{% url 'event-date-propose' object.id %}">Propose new date</a>
-                <hr class="navbar-divider">
+
         {% if my_votes %}
+        <hr class="navbar-divider">
             <p>My votes:</p>
                 <ul>
                     {% for vote in my_votes %}
