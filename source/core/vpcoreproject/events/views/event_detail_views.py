@@ -26,7 +26,7 @@ class EventDetailView(UserPassesTestMixin, DetailView):
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(EventDetailView.success_url)
 
-    def get_template_from_status(self):
+    def set_template_name_suffix(self):
         if 0 <= self.object.status <= len(EventDetailView.template_suffix_from_status):
             self.template_name_suffix = self.template_suffix_from_status[self.object.status]
 
@@ -73,11 +73,12 @@ class EventDetailView(UserPassesTestMixin, DetailView):
             context_status[self.object.status](context)
 
     def get_context_data(self, **kwargs):
-
-        self.get_template_from_status()
         context = super().get_context_data(**kwargs)
         self.get_context_status(context)
         context['status_display'] = self.object.get_status_display()
         #
         return context
 
+    def get(self, request, *args, **kwargs):
+        self.set_template_name_suffix()
+        return super().get(request, *args, **kwargs)
