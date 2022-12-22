@@ -5,7 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 from places.forms import PlaceForm
 from places.models import Place
@@ -18,13 +20,26 @@ class MyPlacesListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Place.user_places(self.request.user).order_by('-id')
+        return Place.user_places(self.request.user).order_by("-id")
+
+
+class PlaceDetailView(LoginRequiredMixin, DetailView):
+    model = Place
+
+
+class PlaceFrameView(LoginRequiredMixin, DetailView):
+    template_name = "places/place_object.html"
+    model = Place
+
+    @xframe_options_sameorigin
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class PlaceCreateView(LoginRequiredMixin, CreateView):
     model = Place
     form_class = PlaceForm
-    success_url = reverse_lazy('places-list')
+    success_url = reverse_lazy("places-list")
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
@@ -32,7 +47,7 @@ class PlaceCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_event(self):
-        event_id = self.request.GET.get('event')
+        event_id = self.request.GET.get("event")
         if event_id:
             return Event.get_or_warning(event_id, self.request)
         return None
@@ -48,9 +63,9 @@ class PlaceCreateView(LoginRequiredMixin, CreateView):
             PlaceProposal(place=place, user_event=user_event).save()
 
     def get_success_url(self):
-        event_id = self.request.GET.get('event')
+        event_id = self.request.GET.get("event")
         if event_id:
-            return reverse('event-detail', kwargs={'pk': event_id})
+            return reverse("event-detail", kwargs={"pk": event_id})
         return PlaceCreateView.success_url
 
     def post(self, request, *args, **kwargs):
@@ -65,9 +80,9 @@ class PlaceCreateView(LoginRequiredMixin, CreateView):
 
 class PlaceDeleteView(UserPassesTestMixin, DeleteView):
     model = Place
-    success_url = reverse_lazy('places-list')
-    permission_role = 'admin'
-    permission_denied_message = f'you are not owner of this place'
+    success_url = reverse_lazy("places-list")
+    permission_role = "admin"
+    permission_denied_message = f"you are not owner of this place"
 
     def test_func(self):
         place = self.get_object()

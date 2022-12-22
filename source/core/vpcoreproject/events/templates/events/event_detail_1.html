@@ -33,7 +33,9 @@ Event details
                     </li>
                 {% endfor %}
             </ul>
+        <iframe src="{% url 'place-frame' proposals.0.place.id  %}" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';"></iframe>
         {% endif %}
+
         <hr class="navbar-divider">
         <a href="{% url 'event-place-propose' object.id %}">Propose new place</a>
 
