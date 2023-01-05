@@ -26,6 +26,12 @@ class MyPlacesListView(LoginRequiredMixin, ListView):
 class PlaceDetailView(LoginRequiredMixin, DetailView):
     model = Place
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["type_display"] = self.object.get_type_display()
+        context["region_display"] = self.object.get_region_display()
+        return context
+
 
 class PlaceFrameView(LoginRequiredMixin, DetailView):
     template_name = "places/place_object.html"

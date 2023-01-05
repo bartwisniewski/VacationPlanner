@@ -100,9 +100,10 @@ class EventDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         self.get_context_status(context)
         context["status_display"] = self.object.get_status_display()
-        #
         return context
 
     def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
         self.set_template_name_suffix()
-        return super().get(request, *args, **kwargs)
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)

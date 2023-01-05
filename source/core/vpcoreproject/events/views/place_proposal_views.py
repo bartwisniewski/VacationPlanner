@@ -1,3 +1,5 @@
+import re
+
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.urls import reverse_lazy
@@ -5,24 +7,30 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import CreateView, DeleteView
-
+from django.db.models import Q
 
 from events.models import PlaceProposal, PlaceProposalVote, Event, UserToEvent
 from events.forms import PlaceProposalForm
 from places.models import Place
-from events.views.date_proposal_views import ProposalVoteView, ProposalUnvoteView, ProposalAcceptView
+from events.views.date_proposal_views import (
+    ProposalVoteView,
+    ProposalUnvoteView,
+    ProposalAcceptView,
+)
+from events.helpers import compile_filter
 
 
 class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = PlaceProposal
     form_class = PlaceProposalForm
-    permission_denied_message = f'you are not participant of this event'
+    permission_denied_message = f"you are not participant of this event"
+    phrase_min_length = 3
 
     def get_success_url(self):
         event = self.get_event(self.request)
         if event:
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def test_func(self):
         event = self.get_event(self.request)
@@ -33,21 +41,37 @@ class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateVie
         return HttpResponseRedirect(self.get_success_url())
 
     def get_event(self, request):
-        event_id = self.kwargs['pk']
+        event_id = self.kwargs["pk"]
         return Event.get_or_warning(event_id, request)
 
     def get_context_data(self, **kwargs):
         event = self.get_event(self.request)
         context = super().get_context_data(**kwargs)
+        filter_phrase = self.request.GET.get("q", "")
         if event:
-            context['event'] = event
+            context["event"] = event
+        if len(filter_phrase) >= self.phrase_min_length:
+            context["filter_phrase"] = filter_phrase
         return context
+
+    def get_queryset(self):
+        filter_phrase = self.request.GET.get("q", "")
+        event = self.get_event(self.request)
+        proposals = PlaceProposal.objects.filter(user_event__event=event)
+        queryset = Place.objects.filter(created_by=self.request.user).exclude(
+            placeproposal__in=proposals
+        )
+        phrases = re.split(",\s*", filter_phrase)
+        print(queryset)
+        for phrase in phrases:
+            if len(phrase) >= self.phrase_min_length:
+                compiled_filter = Place.compile_filter(phrase)
+                queryset = queryset.filter(compiled_filter)
+        return queryset
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
-        event = self.get_event(self.request)
-        proposals = PlaceProposal.objects.filter(user_event__event=event)
-        form.fields['place'].queryset = Place.objects.filter(created_by=self.request.user).exclude(placeproposal__in=proposals)
+        form.fields["place"].queryset = self.get_queryset()
         return form
 
     def form_valid(self, form):
@@ -61,16 +85,28 @@ class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateVie
         return super().form_invalid(form)
 
 
+class PlaceProposalCreateViewAddFilter(View):
+    def post(self, request, *args, **kwargs):
+        event_id = kwargs["pk"]
+        place_proposal_create_url = reverse(
+            "event-place-propose", kwargs={"pk": event_id}
+        )
+        q = self.request.POST.get("filter_phrase", "")
+        if q:
+            place_proposal_create_url += f"?q={q}"
+        return HttpResponseRedirect(place_proposal_create_url)
+
+
 class PlaceProposalDeleteView(UserPassesTestMixin, DeleteView):
     model = PlaceProposal
     template_name = "events/proposal_confirm_delete.html"
-    permission_denied_message = f'you can only delete your own proposal'
+    permission_denied_message = f"you can only delete your own proposal"
 
     def get_success_url(self):
         event = self.get_object().user_event.event
         if event:
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def test_func(self):
         return self.request.user == self.get_object().user_event.user

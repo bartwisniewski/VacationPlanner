@@ -1,4 +1,21 @@
 <h1 class="title">{{ object.name }}</h1>
 <a href="{{object.url}}">{{object.url}}</a>
-<p>{{object.description}}</p>
-<p><span class="mr-1">{{object.address}}</span><span class="mr-1">{{object.city}}</span><span>{{object.country}}</span></p>
+<p>
+    {{object.description}}
+</p>
+<p>
+    <span class="mr-1">Type:</span>{{type_display}}
+</p>
+<p>
+    <span class="mr-1">Region:</span>{{region_display}}
+</p>
+<p>
+    <span class="mr-1">Address:</span>
+    <span class="mr-1">{{object.address}}</span>
+    <span class="mr-1">{{object.city}}</span>
+    <span>{{object.country}}</span>
+</p>
+<p>
+    <span class="mr-1">Capacity:</span>
+    {{object.capacity}}
+</p>
