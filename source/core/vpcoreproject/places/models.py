@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import SET_NULL, Q
+from django.db.models import SET_NULL, Q, F
 from django.utils.translation import gettext_lazy as _
 from users.models import FamilySize
 from django.contrib.auth import get_user_model
@@ -103,3 +103,14 @@ class Place(models.Model):
         compiled_filter |= Place.filter_char(Place.region, filter_phrase)
         compiled_filter |= Place.filter_char(Place.type, filter_phrase)
         return compiled_filter
+
+    @staticmethod
+    def add_filter_by_capacity(queryset, max_capacity: FamilySize) -> Q:
+        queryset = queryset.annotate(
+            capacity_total=F("capacity__adults") + F("capacity__children")
+        )
+        total = max_capacity.total
+        compiled_filter = Q(capacity__isnull=True) | Q(
+            capacity__adults__gte=max_capacity.adults, capacity_total__gte=total
+        )
+        return queryset.filter(compiled_filter)

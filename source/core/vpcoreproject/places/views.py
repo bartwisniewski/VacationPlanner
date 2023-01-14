@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 from places.forms import PlaceForm
@@ -97,3 +97,26 @@ class PlaceDeleteView(UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class PlaceUpdateView(UserPassesTestMixin, UpdateView):
+    model = Place
+    form_class = PlaceForm
+    template_name_suffix = "_form"
+    success_url = reverse_lazy("places-list")
+    permission_denied_message = f"you have not created this place"
+
+    def test_func(self):
+        self.object = self.get_object()
+        return self.object.created_by == self.request.user
+
+    def handle_no_permission(self):
+        messages.warning(self.request, self.permission_denied_message)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_form(self, form_class=None):
+        """Return an instance of the form to be used in this view."""
+        if form_class is None:
+            form_class = self.get_form_class()
+        form_kwargs = self.get_form_kwargs()
+        return form_class(**form_kwargs)

@@ -50,6 +50,7 @@ class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateVie
         filter_phrase = self.request.GET.get("q", "")
         if event:
             context["event"] = event
+            context["participants_count"] = event.get_participants_count()
         if len(filter_phrase) >= self.phrase_min_length:
             context["filter_phrase"] = filter_phrase
         return context
@@ -61,8 +62,10 @@ class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateVie
         queryset = Place.objects.filter(created_by=self.request.user).exclude(
             placeproposal__in=proposals
         )
+        participants = event.get_participants_count()
+        queryset = Place.add_filter_by_capacity(queryset, participants)
         phrases = re.split(",\s*", filter_phrase)
-        print(queryset)
+
         for phrase in phrases:
             if len(phrase) >= self.phrase_min_length:
                 compiled_filter = Place.compile_filter(phrase)

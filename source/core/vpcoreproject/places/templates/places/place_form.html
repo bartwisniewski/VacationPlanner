@@ -12,6 +12,8 @@
     </form>
     {% if request.GET.event %}
         <a href="{% url 'event-detail' request.GET.event %}"><</a>
+    {% else %}
+        <a href="{% url 'places-list' %}"><</a>
     {% endif %}
 </div>
 {% endblock %}

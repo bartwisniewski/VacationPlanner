@@ -1,17 +1,7 @@
-{% extends 'base.html' %}
-{% block title %}
-Event details
-{% endblock %}
-{% block content %}
-<div class="section">
-    <div class="box">
-        {% if exception %}
-            <p>{{ exception }}</p>
-        {% endif %}
-        <h1 class="title">{{ object.name }}</h1>
-        <p>Status: {{ status_display }}</p>
-        <hr class="navbar-divider">
+{% extends 'events/event_detail.html' %}
+{% block content_event %}
         {% if proposals %}
+            <hr class="navbar-divider">
             <p>Date proposals:</p>
             <ul>
                 {% for proposal in proposals %}
@@ -53,7 +43,4 @@ Event details
 
 
         <a href="{% url 'events-list' %}"><</a>
-    </div>
-</div>
-
 {% endblock %}

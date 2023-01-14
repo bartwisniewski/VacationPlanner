@@ -1,6 +1,6 @@
 from events.models import UserToEvent
 from members.helpers import MembersUpdateManager
-from django.db.models import Q
+from django.db.models import Q, Model
 
 
 class UserToEventUpdateManager(MembersUpdateManager):
@@ -19,3 +19,15 @@ def compile_filter(fields: list, filter_phrase: str):
     for field in fields[1:]:
         compiled_filter = compiled_filter | filter_from_field(field, filter_phrase)
     return compiled_filter
+
+
+def get_field_value_from_related_object(
+    instance: Model, relation_field: str, field_name: str
+):
+    if not instance:
+        return None
+    related_object = getattr(instance, relation_field)
+    if not related_object:
+        return None
+    related_object_field_value = getattr(related_object, field_name)
+    return related_object_field_value

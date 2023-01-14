@@ -9,22 +9,24 @@ from friends.models import Friends, UserToFriends
 from places.models import Place
 from events.forms_for_models import UserEventsRoleForm
 from members.models import Member
+from users.models import FamilySize
 
 UserModel = get_user_model()
 
 
 class Event(models.Model):
-
     class EventStatus(models.IntegerChoices):
-        DATE_SELECTION = 0, _('Date selection')
-        PLACE_SELECTION = 1, _('Place selection')
-        BOOKING = 2, _('Booking')
-        CONFIRMED = 3, _('Confirmed')
-        HISTORICAL = 4, _('Historical')
+        DATE_SELECTION = 0, _("Date selection")
+        PLACE_SELECTION = 1, _("Place selection")
+        BOOKING = 2, _("Booking")
+        CONFIRMED = 3, _("Confirmed")
+        HISTORICAL = 4, _("Historical")
 
     name = models.CharField(max_length=30)
     friends = models.ForeignKey(Friends, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=EventStatus.choices, default=EventStatus.DATE_SELECTION)
+    status = models.IntegerField(
+        choices=EventStatus.choices, default=EventStatus.DATE_SELECTION
+    )
     start = models.DateField(null=True)
     end = models.DateField(null=True)
     place = models.ForeignKey(Place, on_delete=models.SET_NULL, null=True)
@@ -38,7 +40,7 @@ class Event(models.Model):
         try:
             return Event.objects.get(id=id)
         except ObjectDoesNotExist:
-            messages.warning(request, f'Event with id {id} does not exist')
+            messages.warning(request, f"Event with id {id} does not exist")
         return None
 
     @staticmethod
@@ -67,8 +69,8 @@ class Event(models.Model):
         related_users = self.usertoevent_set.all()
         count = related_users.count()
         data = {
-        'form-TOTAL_FORMS': f'{count}',
-        'form-INITIAL_FORMS': f'{count}',
+            "form-TOTAL_FORMS": f"{count}",
+            "form-INITIAL_FORMS": f"{count}",
         }
         form_id = 0
         for related_user in related_users:
@@ -78,6 +80,18 @@ class Event(models.Model):
         formset_class = formset_factory(UserEventsRoleForm)
         formset = formset_class(data)
         return formset
+
+    def get_participants_count(self):
+        related_users = self.usertoevent_set.all()
+        participants_count = FamilySize(adults=0, children=0, infants=0)
+
+        for user_in_event in related_users:
+            if user_in_event.user.default_family:
+                participants_count += user_in_event.user.default_family
+            else:
+                participants_count.adults += 1
+
+        return participants_count
 
 
 class UserToEvent(Member):
@@ -91,7 +105,7 @@ class UserToEvent(Member):
         try:
             return UserToEvent.objects.get(user=user, event=event)
         except ObjectDoesNotExist:
-            messages.warning(request, f'User {user} does not belong to {event}')
+            messages.warning(request, f"User {user} does not belong to {event}")
         return None
 
 
@@ -108,7 +122,7 @@ class DateProposal(models.Model):
         try:
             return DateProposal.objects.get(id=id)
         except ObjectDoesNotExist:
-            messages.warning(request, f'Date proposal with id {id} does not exist')
+            messages.warning(request, f"Date proposal with id {id} does not exist")
         return None
 
 
@@ -120,14 +134,14 @@ class DateProposalVote(models.Model):
         return f"{self.proposal.start} - {self.proposal.end}"
 
     class Meta:
-        unique_together = ('proposal', 'voting')
+        unique_together = ("proposal", "voting")
 
     @staticmethod
     def get_or_warning(id, request):
         try:
             return DateProposalVote.objects.get(id=id)
         except ObjectDoesNotExist:
-            messages.warning(request, f'Date proposal vote with id {id} does not exist')
+            messages.warning(request, f"Date proposal vote with id {id} does not exist")
         return None
 
 
@@ -143,7 +157,7 @@ class PlaceProposal(models.Model):
         try:
             return PlaceProposal.objects.get(id=id)
         except ObjectDoesNotExist:
-            messages.warning(request, f'Place proposal with id {id} does not exist')
+            messages.warning(request, f"Place proposal with id {id} does not exist")
         return None
 
 
@@ -155,12 +169,14 @@ class PlaceProposalVote(models.Model):
         return f"{self.proposal.place}"
 
     class Meta:
-        unique_together = ('proposal', 'voting')
+        unique_together = ("proposal", "voting")
 
     @staticmethod
     def get_or_warning(id, request):
         try:
             return PlaceProposalVote.objects.get(id=id)
         except ObjectDoesNotExist:
-            messages.warning(request, f'Place proposal vote with id {id} does not exist')
+            messages.warning(
+                request, f"Place proposal vote with id {id} does not exist"
+            )
         return None

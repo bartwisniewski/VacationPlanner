@@ -15,6 +15,35 @@ class FamilySize(models.Model):
             f"Adults: {self.adults}, children: {self.children}, infants: {self.infants}"
         )
 
+    @property
+    def total(self):
+        return self.adults + self.children
+
+    @total.setter
+    def total(self, val):
+        pass
+
+    def __add__(self, obj2):
+        adults = self.adults + obj2.adults
+        children = self.children + obj2.children
+        infants = self.infants + obj2.infants
+        return FamilySize(adults=adults, children=children, infants=infants)
+
+    def __eq__(self, obj2):
+        return self.adults == obj2.adults and self.children == obj2.children
+
+    def __lt__(self, obj2):
+        return self.adults < obj2.adults or self.total < obj2.total
+
+    def __le__(self, obj2):
+        return self.adults <= obj2.adults or self.total <= obj2.total
+
+    def __gt__(self, obj2):
+        return self.adults > obj2.adults and self.total > obj2.total
+
+    def __ge__(self, obj2):
+        return self.adults >= obj2.adults and self.total >= obj2.total
+
 
 class MyUser(AbstractUser):
     default_family = models.OneToOneField(

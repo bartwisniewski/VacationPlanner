@@ -1,20 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'events/event_detail.html' %}
 {% block title %}
 Event details
 {% endblock %}
-{% block content %}
-<div class="section">
-    <div class="box">
-        {% if exception %}
-            <p>{{ exception }}</p>
-        {% endif %}
-        <h1 class="title">{{ object.name }}</h1>
+{% block content_event %}
         <h2>{{object.start}}-{{object.end}}</h2>
         <h2>{{object.place}}</h2>
-        <p>Status: {{ status_display }}</p>
-
-        <a href="{% url 'events-list' %}"><</a>
-    </div>
-</div>
-
 {% endblock %}

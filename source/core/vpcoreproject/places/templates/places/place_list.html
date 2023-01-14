@@ -12,7 +12,9 @@ My events
         <ul>
             {% for place in object_list %}
             <li>
-                <span><a href="{% url 'place' place.id %}">{{ place }}</a></span><a href="{% url 'place-delete' place.id %}">X</a>
+                <span><a href="{% url 'place' place.id %}">{{ place }}</a></span>
+                <span><a href="{% url 'place-edit' place.id %}">EDIT</a></span>
+                <a href="{% url 'place-delete' place.id %}">X</a>
             </li>
             {% endfor %}
         </ul>

@@ -100,6 +100,7 @@ class EventDetailView(UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         self.get_context_status(context)
         context["status_display"] = self.object.get_status_display()
+        context["participants_count"] = self.object.get_participants_count()
         return context
 
     def get(self, request, *args, **kwargs):
