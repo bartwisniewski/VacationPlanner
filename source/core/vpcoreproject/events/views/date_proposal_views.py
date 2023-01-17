@@ -1,6 +1,5 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
@@ -14,13 +13,13 @@ from events.forms import DateProposalForm
 class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = DateProposal
     form_class = DateProposalForm
-    permission_denied_message = f'you are not participant of this event'
+    permission_denied_message = f"you are not participant of this event"
 
     def get_success_url(self):
         event = self.get_event(self.request)
         if event:
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def test_func(self):
         event = self.get_event(self.request)
@@ -31,7 +30,7 @@ class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
         return HttpResponseRedirect(self.get_success_url())
 
     def get_event(self, request):
-        event_id = self.kwargs['pk']
+        event_id = self.kwargs["pk"]
         return Event.get_or_warning(event_id, request)
 
     def get(self, request, *args, **kwargs):
@@ -45,7 +44,7 @@ class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
         event = self.get_event(self.request)
         context = super().get_context_data(**kwargs)
         if event:
-            context['event'] = event
+            context["event"] = event
 
         return context
 
@@ -68,13 +67,13 @@ class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
 class DateProposalDeleteView(UserPassesTestMixin, DeleteView):
     model = DateProposal
     template_name = "events/proposal_confirm_delete.html"
-    permission_denied_message = f'you can only delete your own proposal'
+    permission_denied_message = f"you can only delete your own proposal"
 
     def get_success_url(self):
         event = self.get_object().user_event.event
         if event:
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def test_func(self):
         return self.request.user == self.get_object().user_event.user
@@ -94,15 +93,15 @@ class ProposalVoteView(LoginRequiredMixin, View):
         super().__init__(*args, **kwargs)
 
     def get_object(self):
-        proposal_id = self.kwargs['pk']
+        proposal_id = self.kwargs["pk"]
         proposal = self.proposal_model.get_or_warning(proposal_id, self.request)
         self.object = proposal
 
     def get_target_url(self):
         if self.object:
             event = self.object.user_event.event
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def post(self, request, *args, **kwargs):
         self.get_object()
@@ -119,11 +118,13 @@ class ProposalVoteView(LoginRequiredMixin, View):
             return HttpResponseRedirect(target_url)
 
         proposal = self.object
-        proposal_vote, created = self.vote_model.objects.get_or_create(proposal=proposal, voting=user_to_event)
+        proposal_vote, created = self.vote_model.objects.get_or_create(
+            proposal=proposal, voting=user_to_event
+        )
         if created:
-            messages.info(self.request, f'You have successfully voted on: {proposal}')
+            messages.info(self.request, f"You have successfully voted on: {proposal}")
         else:
-            messages.warning(self.request, f'You have already voted on: {proposal}')
+            messages.warning(self.request, f"You have already voted on: {proposal}")
 
         return HttpResponseRedirect(target_url)
 
@@ -141,15 +142,15 @@ class ProposalUnvoteView(LoginRequiredMixin, View):
         super().__init__(*args, **kwargs)
 
     def get_object(self):
-        proposal_vote_id = self.kwargs['pk']
+        proposal_vote_id = self.kwargs["pk"]
         proposal_vote = self.model.get_or_warning(proposal_vote_id, self.request)
         self.object = proposal_vote
 
     def get_target_url(self):
         if self.object:
             event = self.object.proposal.user_event.event
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def test_func(self, request):
         return request.user == self.object.voting.user
@@ -162,12 +163,12 @@ class ProposalUnvoteView(LoginRequiredMixin, View):
             return HttpResponseRedirect(target_url)
 
         if not self.test_func(request):
-            messages.warning(request, f'You can only unvote your own votes')
+            messages.warning(request, f"You can only unvote your own votes")
             return HttpResponseRedirect(target_url)
 
         proposal_string = str(self.object)
         self.object.delete()
-        messages.info(request, f'You have successfully unvoted: {proposal_string}')
+        messages.info(request, f"You have successfully unvoted: {proposal_string}")
         return HttpResponseRedirect(target_url)
 
 
@@ -178,23 +179,23 @@ class DateProposalUnvoteView(ProposalUnvoteView):
 class ProposalAcceptView(UserPassesTestMixin, TemplateView):
     model = DateProposal
     template_name = "events/proposal_accept_confirm.html"
-    permission_role = 'admin'
-    permission_denied_message = f'you are not {permission_role} of this event'
+    permission_role = "admin"
+    permission_denied_message = f"you are not {permission_role} of this event"
 
     def __init__(self, *args, **kwargs):
         self.object = None
         super().__init__(*args, **kwargs)
 
     def get_object(self):
-        proposal_id = self.kwargs['pk']
+        proposal_id = self.kwargs["pk"]
         proposal = self.model.get_or_warning(proposal_id, self.request)
         self.object = proposal
 
     def get_target_url(self):
         if self.object:
             event = self.object.user_event.event
-            return reverse('event-detail', kwargs={'pk': event.id})
-        return reverse('event-list')
+            return reverse("event-detail", kwargs={"pk": event.id})
+        return reverse("event-list")
 
     def test_func(self):
         self.get_object()
@@ -209,10 +210,10 @@ class ProposalAcceptView(UserPassesTestMixin, TemplateView):
         self.get_object()
         if self.object:
             context = self.get_context_data(**kwargs)
-            context['proposal'] = self.object
+            context["proposal"] = self.object
             return self.render_to_response(context)
-
-        return HttpResponseRedirect(self.success_url)
+        target_url = self.get_target_url()
+        return HttpResponseRedirect(target_url)
 
     def post_action(self):
         pass

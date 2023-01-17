@@ -13,7 +13,15 @@ Event details
         <p>Participants: {{ participants_count }} </p>
         {% block content_event %}
         {% endblock %}
-        <a href="{% url 'events-list' %}"><</a>
+        {% if object.status > 0 %}
+        <p>
+            <a href="{% url 'event-back' object.id %}">STEP BACK</a>
+        </p>
+        {% endif %}
+        <p>
+            <a href="{% url 'events-list' %}"><</a>
+        </p>
+
     </div>
 </div>
 

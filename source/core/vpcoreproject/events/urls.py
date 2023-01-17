@@ -21,6 +21,11 @@ urlpatterns = [
         name="event-edit",
     ),
     path(
+        "<pk>/back/",
+        event_manipulate_views.EventStateBackView.as_view(),
+        name="event-back",
+    ),
+    path(
         "<pk>/delete/",
         event_manipulate_views.EventDeleteView.as_view(),
         name="event-delete",

@@ -30,7 +30,7 @@ class Event(models.Model):
     start = models.DateField(null=True)
     end = models.DateField(null=True)
     place = models.ForeignKey(Place, on_delete=models.SET_NULL, null=True)
-    promoter = models.ForeignKey(UserToFriends, on_delete=models.SET_NULL, null=True)
+    promoter = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -92,6 +92,35 @@ class Event(models.Model):
                 participants_count.adults += 1
 
         return participants_count
+
+    @staticmethod
+    def get_status_text_by_val(value: int) -> str:
+        choices = Event.EventStatus.choices
+        found = list(filter(lambda choice: choice[0] == value, choices))
+        if found:
+            return found[0][1]
+        return ""
+
+    def go_back_1(self):
+        self.status = 0
+        self.start = None
+        self.end = None
+        self.save()
+
+    def go_back_2(self):
+        self.status = 1
+        self.place = None
+        self.promoter = None
+        self.save()
+
+    def go_back_3(self):
+        self.status = 2
+        self.save()
+
+    def go_back(self):
+        actions = [None, self.go_back_1, self.go_back_2, self.go_back_3]
+        if 0 < self.status < len(actions):
+            actions[self.status]()
 
 
 class UserToEvent(Member):

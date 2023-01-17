@@ -134,6 +134,9 @@ class PlaceProposalAcceptView(ProposalAcceptView):
 
     def post_action(self):
         event = self.object.user_event.event
+        promoter = self.object.user_event.user
+
         event.place = self.object.place
         event.status = Event.EventStatus.BOOKING
+        event.promoter = promoter
         event.save()

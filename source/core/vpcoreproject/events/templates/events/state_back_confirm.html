@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <form method="post">{% csrf_token %}
+        <p>Are you sure you want to go back to "{{ previous_step }}"?</p>
+        <input type="submit" value="Confirm">
+    </form>
+    <a href="{% url 'event-detail' object.id %}">back</a>
+</div>
+{% endblock %}
