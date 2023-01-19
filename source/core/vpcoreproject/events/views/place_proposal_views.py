@@ -1,13 +1,13 @@
 import re
 
+from django.core.mail import send_mail
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import CreateView, DeleteView
-from django.db.models import Q
 
 from events.models import PlaceProposal, PlaceProposalVote, Event, UserToEvent
 from events.forms import PlaceProposalForm
@@ -132,6 +132,17 @@ class PlaceProposalUnvoteView(ProposalUnvoteView):
 class PlaceProposalAcceptView(ProposalAcceptView):
     model = PlaceProposal
 
+    @staticmethod
+    def send_mail_to_promoter(promoter):
+        send_mail(
+            "Your proposal was selected",
+            "Congratulations, your place proposal has been chosen by the group. "
+            "Now you need to process with booking and confirm it in the vacation planner",
+            settings.EMAIL_HOST_USER,
+            [promoter.email],
+            fail_silently=True,
+        )
+
     def post_action(self):
         event = self.object.user_event.event
         promoter = self.object.user_event.user
@@ -140,3 +151,4 @@ class PlaceProposalAcceptView(ProposalAcceptView):
         event.status = Event.EventStatus.BOOKING
         event.promoter = promoter
         event.save()
+        self.send_mail_to_promoter(promoter)

@@ -53,6 +53,12 @@ class MyUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def get_default_family(self):
+        try:
+            return self.default_family
+        except ObjectDoesNotExist:
+            return None
+
 
 class SocialMedia(models.Model):
     name = models.CharField(max_length=30)

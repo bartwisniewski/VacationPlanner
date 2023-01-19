@@ -25,16 +25,16 @@ class DashboardView(TemplateView):
 
         context = self.get_context_data(**kwargs)
         if request.user.is_authenticated:
-            context['joined'] = request.user.date_joined.strftime('%m/%d/%Y')
+            context["joined"] = request.user.date_joined.strftime("%m/%d/%Y")
 
         return self.render_to_response(context)
 
 
 class UserRegisterEdit(View):
-    template_name = 'users/register.html'
+    template_name = "users/register.html"
     user_form_class = MyUserCreationForm
     family_form_class = FamilySizeForm
-    success_url = '/'
+    success_url = "/"
 
     @staticmethod
     def get_user(request):
@@ -45,16 +45,14 @@ class UserRegisterEdit(View):
     @staticmethod
     def get_family(user):
         if user:
-            # sprawdzac w modelu user, dodatkowa funkcja
-            try:
-                return user.default_family
-            except ObjectDoesNotExist:
-                pass
+            return user.get_default_family()
         return None
 
     def get_post_data(self, post):
         user_data = get_modelform_data_from_post(post=post, form=self.user_form_class)
-        family_data = get_modelform_data_from_post(post=post, form=self.family_form_class)
+        family_data = get_modelform_data_from_post(
+            post=post, form=self.family_form_class
+        )
         return user_data, family_data
 
     def init_forms(self, request, user_post, family_post):
@@ -67,14 +65,21 @@ class UserRegisterEdit(View):
 
     def get(self, request, *args, **kwargs):
         print(request.user)
-        user_form, family_form, family_active = self.init_forms(request=request, user_post=None, family_post=None)
-        data = {'user_form': user_form, 'family_form': family_form, 'display_family': family_active}
+        user_form, family_form, family_active = self.init_forms(
+            request=request, user_post=None, family_post=None
+        )
+        data = {
+            "user_form": user_form,
+            "family_form": family_form,
+            "display_family": family_active,
+        }
         return render(request, self.template_name, data)
 
     def post(self, request, *args, **kwargs):
         user_post, family_post = self.get_post_data(post=request.POST)
-        user_form, family_form, family_active = self.init_forms(request=request, user_post=user_post,
-                                                                family_post=family_post)
+        user_form, family_form, family_active = self.init_forms(
+            request=request, user_post=user_post, family_post=family_post
+        )
         if (family_form.is_valid() or not family_active) and user_form.is_valid():
             user = user_form.save(commit=False)
             if family_active:
@@ -84,19 +89,23 @@ class UserRegisterEdit(View):
             login(request, user)
             return HttpResponseRedirect(self.success_url)
 
-        data = {'user_form': user_form, 'family_form': family_form, 'display_family': family_active}
+        data = {
+            "user_form": user_form,
+            "family_form": family_form,
+            "display_family": family_active,
+        }
         return render(request, self.template_name, data)
 
 
 class UserEditView(LoginRequiredMixin, UserRegisterEdit):
-    template_name = 'users/edit.html'
+    template_name = "users/edit.html"
     user_form_class = MyUserUpdateForm
     family_form_class = FamilySizeForm
-    success_url = '/user/edit'
+    success_url = "/user/edit"
 
 
 class RegisterView(UserRegisterEdit):
-    template_name = 'users/register.html'
+    template_name = "users/register.html"
     user_form_class = MyUserCreationForm
     family_form_class = FamilySizeForm
-    success_url = '/'
+    success_url = "/"

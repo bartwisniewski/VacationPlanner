@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import TemplateView
-from events.models import Event, UserToEvent
+from events.models import Event, UserToEvent, PlaceProposal
 from friends.models import Friends
 
 from members.helpers import SingleObjectUserRoleRequiredView, owner_only
@@ -118,10 +118,17 @@ class EventStateBackView(UserPassesTestMixin, TemplateView):
             return reverse("event-detail", kwargs={"pk": event.id})
         return reverse("event-list")
 
+    def is_promoter(self):
+        event = self.object
+        if event.status in [Event.EventStatus.BOOKING, Event.EventStatus.CONFIRMED]:
+            return self.request.user == event.promoter
+        return False
+
     def test_func(self):
         self.get_object()
         event = self.object
-        return event.test_user_role(self.request.user, self.permission_role)
+        is_admin = event.test_user_role(self.request.user, self.permission_role)
+        return self.is_promoter() or is_admin
 
     def handle_no_permission(self):
         messages.warning(self.request, self.permission_denied_message)
@@ -141,6 +148,11 @@ class EventStateBackView(UserPassesTestMixin, TemplateView):
         return HttpResponseRedirect(target_url)
 
     def post_action(self):
+        if self.object.status == Event.EventStatus.BOOKING and self.is_promoter():
+            place_proposal = PlaceProposal.objects.get(
+                place=self.object.place, user_event__event=self.object
+            )
+            place_proposal.delete()
         self.object.go_back()
 
     def post(self, request, *args, **kwargs):
