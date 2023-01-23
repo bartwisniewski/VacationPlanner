@@ -17,7 +17,7 @@ from events.models import (
 
 class EventDetailView(UserPassesTestMixin, DetailView):
     model = Event
-    template_suffix_from_status = ["_detail_0", "_detail_1", "_detail_2"]
+    template_suffix_from_status = ["_detail_0", "_detail_1", "_detail_2", "_detail_3"]
     success_url = reverse_lazy("events-list")
     permission_denied_message = f"you are not participant of this event"
 
@@ -45,7 +45,6 @@ class EventDetailView(UserPassesTestMixin, DetailView):
         return my_votes
 
     def annotate_i_voted(self, proposals, lookup_vote_model):
-        # my_voted = proposals.filter(dateproposalvote__voting__user=self.request.user)
         lookup = f"{lookup_vote_model}__voting__user"
         my_voted = proposals.filter(**{lookup: self.request.user})
         return proposals.annotate(

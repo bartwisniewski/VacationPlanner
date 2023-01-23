@@ -9,6 +9,7 @@ from events.views import (
     event_manipulate_views,
     date_proposal_views,
     place_proposal_views,
+    booking_confirmation_views,
 )
 
 urlpatterns = [
@@ -24,6 +25,11 @@ urlpatterns = [
         "<pk>/back/",
         event_manipulate_views.EventStateBackView.as_view(),
         name="event-back",
+    ),
+    path(
+        "<pk>/confirm/",
+        booking_confirmation_views.EventConfrimBookingView.as_view(),
+        name="event-booking-confirm",
     ),
     path(
         "<pk>/delete/",
