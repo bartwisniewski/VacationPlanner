@@ -1,0 +1,9 @@
+{% extends 'events/event_detail.html' %}
+{% block title %}
+Event details
+{% endblock %}
+{% block content_event %}
+        <h2>{{object.start}}-{{object.end}}</h2>
+        <h2>{{object.place}}</h2>
+        <h2>proposed by: {{object.promoter}}</h2>
+{% endblock %}

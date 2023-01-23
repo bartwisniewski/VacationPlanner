@@ -1,0 +1,43 @@
+{% extends 'events/event_detail.html' %}
+{% block content_event %}
+        {% if proposals %}
+            <hr class="navbar-divider">
+            <p>Date proposals:</p>
+            <ul>
+                {% for proposal in proposals %}
+                    <li>
+                        <span class="mr-1">{{proposal}}</span>
+                        by <span class="mr-1">{{proposal.user_event.user}}</span>
+                        votes: <span class="mr-1">{{proposal.dateproposalvote__count}}</span>
+                        {% if proposal.user_event.user == user %}
+                            <a href="{% url 'date-propose-delete' proposal.id %}">Remove my proposal</a>
+                        {% elif not proposal.i_voted %}
+                        <form method="post" action="{% url 'date-propose-vote' proposal.id %}" style="display: inline-block">{% csrf_token %}
+                                 <div class="control">
+                                    <button type="submit">VOTE</button>
+                                 </div>
+                        </form>
+                        {% endif %}
+                        <a href="{% url 'date-propose-accept' proposal.id %}">SELECT THIS PROPOSAL</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <hr class="navbar-divider">
+        <a href="{% url 'event-date-propose' object.id %}">Propose new date</a>
+
+        {% if my_votes %}
+        <hr class="navbar-divider">
+            <p>My votes:</p>
+                <ul>
+                    {% for vote in my_votes %}
+                        <li>
+                            <span class="mr-1">{{vote}}</span>
+                            <form method="post" action="{% url 'date-propose-unvote' vote.id %}" style="display: inline-block">{% csrf_token %}
+                                    <button type="submit">UNVOTE</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+{% endblock %}

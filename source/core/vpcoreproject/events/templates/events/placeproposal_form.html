@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <span>Event:</span> {{event}}
+    <p>Participants: {{ participants_count }} </p>
+    <hr class="navbar-divider">
+    <p>Propose one of your places:</p>
+    <div class="columns">
+        <div class="column is-2">
+            <form method="post">{% csrf_token %}
+                {{ form }}
+                <div class="control is-small">
+                    <button class="button is-primary is-small" name="search" type="submit">Propose</button>
+                </div>
+            </form>
+        </div>
+        <div class="column">
+            <form method="post" action="{% url 'event-place-propose-filter' event.id %}">{% csrf_token %}
+                <div class="field has-addons">
+                    <div class="control is-small">
+                        <input class="input is-small" type="text" placeholder="name, description, region etc." name="filter_phrase" value="{{filter_phrase}}">
+                    </div>
+                    <div class="control is-small">
+                        <button class="button is-info is-small" name="search" type="submit">filter places</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr class="navbar-divider">
+    <p><a href="{% url 'place-create' %}?event={{event.id}}">create new</a></p>
+    <p><a href="{% url 'event-detail' event.id %}">back</a></p>
+
+</div>
+{% endblock %}

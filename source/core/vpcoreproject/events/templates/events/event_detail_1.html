@@ -1,0 +1,56 @@
+{% extends 'events/event_detail.html' %}
+{% block scripts %}
+    {% include 'events/event_detail_1_scripts.html' %}
+{% endblock %}
+{% block content_event %}
+        <h2>{{object.start}}-{{object.end}}</h2>
+        {% if proposals %}
+            <hr class="navbar-divider">
+            <div class="columns">
+                <div class="column is-half">
+                    <div>Place proposals:</div>
+                    <div>
+                        <ul>
+                            {% for proposal in proposals %}
+                                <li>
+                                    <span class="mr-1"><a onclick="set_place_iframe('{% url 'place-frame' proposal.place.id  %}')">{{proposal}}</a></span>
+                                    by <span class="mr-1">{{proposal.user_event.user}}</span>
+                                    votes: <span class="mr-1">{{proposal.placeproposalvote__count}}</span>
+                                    {% if proposal.user_event.user == user %}
+                                        <a href="{% url 'place-propose-delete' proposal.id %}">Remove my proposal</a>
+                                    {% elif not proposal.i_voted %}
+                                    <form method="post" action="{% url 'place-propose-vote' proposal.id %}" style="display: inline-block">{% csrf_token %}
+                                             <div class="control">
+                                                <button type="submit">VOTE</button>
+                                             </div>
+                                    </form>
+                                    {% endif %}
+                                    <a href="{% url 'place-propose-accept' proposal.id %}">SELECT THIS PROPOSAL</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="column is-offset-1">
+                    <iframe id="place-preview" src="{% url 'place-frame' proposals.0.place.id  %}" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';"></iframe>
+                </div>
+            </div>
+        {% endif %}
+        <hr class="navbar-divider">
+        <a href="{% url 'event-place-propose' object.id %}">Propose new place</a>
+        {% if my_votes %}
+        <hr class="navbar-divider">
+            <p>My votes:</p>
+                <ul>
+                    {% for vote in my_votes %}
+                        <li>
+                            <span class="mr-1">{{vote}}</span>
+                            <form method="post" action="{% url 'place-propose-unvote' vote.id %}" style="display: inline-block">{% csrf_token %}
+                                    <button type="submit">UNVOTE</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+{% endblock %}

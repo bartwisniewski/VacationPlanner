@@ -21,5 +21,7 @@ urlpatterns = [
     path('', RedirectView.as_view(pattern_name='dashboard')),
     path('user/', include('users.urls')),
     path('friends/', include('friends.urls')),
+    path('events/', include('events.urls')),
+    path('places/', include('places.urls')),
     path('admin/', admin.site.urls),
 ]
