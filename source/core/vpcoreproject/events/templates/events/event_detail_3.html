@@ -6,9 +6,4 @@ Event details
         <h2>{{object.start}}-{{object.end}}</h2>
         <h2>{{object.place}}</h2>
         <h2>proposed by: {{object.promoter}}</h2>
-        {% if user == object.promoter %}
-        <p>
-                <a href="{% url 'event-booking-confirm' object.id %}">CONFIRM BOOKING</a>
-        </p>
-        {% endif %}
 {% endblock %}

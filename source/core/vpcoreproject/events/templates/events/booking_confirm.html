@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <form method="post">{% csrf_token %}
+        <p>Confirm booking of the place {{object.place}} for the event {{object}}</p>
+        <input type="submit" value="Confirm">
+    </form>
+    <a href="{% url 'event-detail' object.id %}">back</a>
+</div>
+{% endblock %}
