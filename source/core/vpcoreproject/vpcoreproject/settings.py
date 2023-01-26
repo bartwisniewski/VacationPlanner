@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "friends.apps.FriendsConfig",
     "events.apps.EventsConfig",
     "places.apps.PlacesConfig",
+    "chat.apps.ChatConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
