@@ -6,6 +6,7 @@ from django.forms import formset_factory
 from users.models import MyUser
 from friends.forms import UserFriendsRoleForm
 from members.models import Member
+
 # Create your models here.
 
 
@@ -20,7 +21,7 @@ class Friends(models.Model):
         try:
             return Friends.objects.get(id=id)
         except ObjectDoesNotExist:
-            messages.warning(request, f'Friends group with id {id} does not exist')
+            messages.warning(request, f"Friends group with id {id} does not exist")
         return None
 
     def test_user_role(self, user, role):
@@ -34,8 +35,8 @@ class Friends(models.Model):
         related_users = self.usertofriends_set.all()
         count = related_users.count()
         data = {
-        'form-TOTAL_FORMS': f'{count}',
-        'form-INITIAL_FORMS': f'{count}',
+            "form-TOTAL_FORMS": f"{count}",
+            "form-INITIAL_FORMS": f"{count}",
         }
         form_id = 0
         for related_user in related_users:

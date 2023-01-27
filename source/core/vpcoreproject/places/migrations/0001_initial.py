@@ -9,43 +9,117 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Owner',
+            name="Owner",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('phone', models.CharField(max_length=20)),
-                ('email', models.EmailField(max_length=254)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
+                ("phone", models.CharField(max_length=20)),
+                ("email", models.EmailField(max_length=254)),
             ],
         ),
         migrations.CreateModel(
-            name='PlaceSize',
+            name="PlaceSize",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bedrooms', models.IntegerField(default=1)),
-                ('bathrooms', models.IntegerField(default=1)),
-                ('living_rooms', models.IntegerField(default=0)),
-                ('kitchens', models.IntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("bedrooms", models.IntegerField(default=1)),
+                ("bathrooms", models.IntegerField(default=1)),
+                ("living_rooms", models.IntegerField(default=0)),
+                ("kitchens", models.IntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
-            name='Place',
+            name="Place",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('url', models.URLField()),
-                ('description', models.TextField()),
-                ('address', models.CharField(max_length=255)),
-                ('city', models.CharField(max_length=100)),
-                ('country', models.CharField(max_length=30)),
-                ('type', models.CharField(choices=[('HT', 'Hotel'), ('HS', 'House'), ('BG', 'Bungalow'), ('FL', 'Flat'), ('AG', 'Agritourism'), ('CA', 'Camping'), ('YA', 'Yacht')], default='HT', max_length=2)),
-                ('region', models.CharField(choices=[('MT', 'Mountains'), ('LK', 'Lake'), ('SE', 'Sea'), ('WD', 'Wood'), ('FL', 'Fields'), ('CT', 'City')], default='MT', max_length=2)),
-                ('capacity', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='users.familysize')),
-                ('owner', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='places.owner')),
-                ('size', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='places.placesize')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("url", models.URLField()),
+                ("description", models.TextField()),
+                ("address", models.CharField(max_length=255)),
+                ("city", models.CharField(max_length=100)),
+                ("country", models.CharField(max_length=30)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("HT", "Hotel"),
+                            ("HS", "House"),
+                            ("BG", "Bungalow"),
+                            ("FL", "Flat"),
+                            ("AG", "Agritourism"),
+                            ("CA", "Camping"),
+                            ("YA", "Yacht"),
+                        ],
+                        default="HT",
+                        max_length=2,
+                    ),
+                ),
+                (
+                    "region",
+                    models.CharField(
+                        choices=[
+                            ("MT", "Mountains"),
+                            ("LK", "Lake"),
+                            ("SE", "Sea"),
+                            ("WD", "Wood"),
+                            ("FL", "Fields"),
+                            ("CT", "City"),
+                        ],
+                        default="MT",
+                        max_length=2,
+                    ),
+                ),
+                (
+                    "capacity",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="users.familysize",
+                    ),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="places.owner",
+                    ),
+                ),
+                (
+                    "size",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="places.placesize",
+                    ),
+                ),
             ],
         ),
     ]

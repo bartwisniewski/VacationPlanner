@@ -11,7 +11,7 @@ class MyUserUpdateForm(ModelForm):
 
     class Meta:
         model = MyUser
-        fields = ['username', 'email']
+        fields = ["username", "email"]
 
 
 class MyUserCreationForm(UserCreationForm):
@@ -33,4 +33,4 @@ class FamilySizeForm(ModelForm):
 
     class Meta:
         model = FamilySize
-        fields = '__all__'
+        fields = "__all__"

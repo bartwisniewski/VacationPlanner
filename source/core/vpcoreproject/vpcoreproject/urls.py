@@ -18,10 +18,11 @@ from django.urls import path, include
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('', RedirectView.as_view(pattern_name='dashboard')),
-    path('user/', include('users.urls')),
-    path('friends/', include('friends.urls')),
-    path('events/', include('events.urls')),
-    path('places/', include('places.urls')),
-    path('admin/', admin.site.urls),
+    path("", RedirectView.as_view(pattern_name="dashboard")),
+    path("user/", include("users.urls")),
+    path("friends/", include("friends.urls")),
+    path("events/", include("events.urls")),
+    path("places/", include("places.urls")),
+    path("chat/", include("chat.urls")),
+    path("admin/", admin.site.urls),
 ]

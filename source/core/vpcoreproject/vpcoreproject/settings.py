@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "users.apps.UsersConfig",
     "members.apps.MembersConfig",
     "friends.apps.FriendsConfig",
@@ -76,6 +77,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "vpcoreproject.wsgi.application"
 
+ASGI_APPLICATION = "vpcoreproject.asgi.application"
+
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

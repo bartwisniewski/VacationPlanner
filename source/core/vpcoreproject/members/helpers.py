@@ -9,7 +9,7 @@ from django.db import models
 class SingleObjectUserRoleRequiredView(LoginRequiredMixin, UserPassesTestMixin):
     success_url = None
     permission_role = None
-    permission_denied_message = f'you are not allowed'
+    permission_denied_message = f"you are not allowed"
 
     def test_func(self):
         self.object = self.get_object()
@@ -22,10 +22,11 @@ class SingleObjectUserRoleRequiredView(LoginRequiredMixin, UserPassesTestMixin):
 
 def owner_only(method):
     def inner(view, *args, **kwargs):
-        if view.object.test_user_role(view.request.user, 'owner'):
+        if view.object.test_user_role(view.request.user, "owner"):
             method(view, *args, **kwargs)
         else:
             messages.warning(view.request, "You are not the owner")
+
     return inner
 
 
@@ -42,16 +43,18 @@ class MembersUpdateManager(ABC):
 
     @classmethod
     def __update_member(cls, member_data: dict):
-        member = cls.__get_member(member_data.get('id'))
+        member = cls.__get_member(member_data.get("id"))
         if member and not member.owner:
-            member.admin = member_data.get('admin')
-            member.owner = member_data.get('owner')
+            member.admin = member_data.get("admin")
+            member.owner = member_data.get("owner")
             member.save()
 
     @classmethod
     def __member_changed(cls, member_data: dict):
-        member = cls.__get_member(member_data.get('id'))
-        if member.admin != member_data.get('admin') or member.owner != member_data.get('owner'):
+        member = cls.__get_member(member_data.get("id"))
+        if member.admin != member_data.get("admin") or member.owner != member_data.get(
+            "owner"
+        ):
             return True
         return False
 

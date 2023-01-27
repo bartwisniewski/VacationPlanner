@@ -8,32 +8,71 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='DateProposal',
+            name="DateProposal",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start', models.DateField()),
-                ('end', models.DateField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start", models.DateField()),
+                ("end", models.DateField()),
             ],
         ),
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.IntegerField(choices=[(0, 'Date selection'), (1, 'Place selection'), (2, 'Booking'), (3, 'Confirmed'), (4, 'Historical')])),
-                ('start', models.DateField()),
-                ('end', models.DateField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.IntegerField(
+                        choices=[
+                            (0, "Date selection"),
+                            (1, "Place selection"),
+                            (2, "Booking"),
+                            (3, "Confirmed"),
+                            (4, "Historical"),
+                        ]
+                    ),
+                ),
+                ("start", models.DateField()),
+                ("end", models.DateField()),
             ],
         ),
         migrations.CreateModel(
-            name='PlaceProposal',
+            name="PlaceProposal",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='events.event')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="events.event"
+                    ),
+                ),
             ],
         ),
     ]

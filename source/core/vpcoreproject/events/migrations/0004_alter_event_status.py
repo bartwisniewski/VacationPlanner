@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0003_remove_dateproposal_event_remove_dateproposal_user_and_more'),
+        ("events", "0003_remove_dateproposal_event_remove_dateproposal_user_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='status',
-            field=models.IntegerField(choices=[(0, 'Date selection'), (1, 'Place selection'), (2, 'Booking'), (3, 'Confirmed'), (4, 'Historical')], default=0),
+            model_name="event",
+            name="status",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Date selection"),
+                    (1, "Place selection"),
+                    (2, "Booking"),
+                    (3, "Confirmed"),
+                    (4, "Historical"),
+                ],
+                default=0,
+            ),
         ),
     ]
