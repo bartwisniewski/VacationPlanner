@@ -14,8 +14,11 @@ from events.models import (
     PlaceProposalVote,
 )
 
+from chat.models import EventChat, Message
+from chat.views import ChatMixin
 
-class EventDetailView(UserPassesTestMixin, DetailView):
+
+class EventDetailView(UserPassesTestMixin, DetailView, ChatMixin):
     model = Event
     template_suffix_from_status = ["_detail_0", "_detail_1", "_detail_2", "_detail_3"]
     success_url = reverse_lazy("events-list")
@@ -100,6 +103,10 @@ class EventDetailView(UserPassesTestMixin, DetailView):
         self.get_context_status(context)
         context["status_display"] = self.object.get_status_display()
         context["participants_count"] = self.object.get_participants_count()
+        self.add_chat_context(context, self.request)
+        event_chat = EventChat.objects.get(event=self.object)
+        chat = event_chat.chat
+        context["messages"] = Message.objects.filter(chat=chat)[:20]
         return context
 
     def get(self, request, *args, **kwargs):

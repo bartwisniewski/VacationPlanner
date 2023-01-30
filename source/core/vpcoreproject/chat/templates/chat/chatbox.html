@@ -1,42 +1,27 @@
-<html lang="en">
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-</head>
-
-<body>
-
-    <div class="container">
-        <div class="row d-flex justify-content-center">
-            <div class="col-3">
-                <form>
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1" class="h4 pt-5">Chatbox</label>
-                        <textarea class="form-control" id="chat-text" readonly rows="10"></textarea><br>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" placeholder="Enter text here" id="input" type="text"></br>
-                    </div>
-                    <input class="btn btn-primary btn-lg btn-block" id="submit" type="button" value="Send">
-                </form>
-            </div>
-        </div>
+    <div class="box">
+        {{ chat_id }}
+            <form>
+                <div class="field">
+                      <div class="control">
+                    <textarea class="textarea" id="chat-text" readonly rows="10"></textarea>
+                          </div>
+                </div>
+                <div class="field">
+                    <input class="control" placeholder="New message" id="chat-input" type="text"></br>
+                </div>
+                <input class="button" id="chat-submit" type="button" value="Send">
+            </form>
     </div>
+</div>
     {% comment %} Get data for username and chatbox name{% endcomment %}
     {{ request.user.username|json_script:"user_username" }}
-    {{ chat_box_name|json_script:"room-name" }}
+    {{ chat_name|json_script:"chat-name-for-script" }}
 
     <script>
        const user_username = JSON.parse(document.getElementById('user_username').textContent);
-       document.querySelector('#submit').onclick = function (e) {
-          const messageInputDom = document.querySelector('#input');
+       document.querySelector('#chat-submit').onclick = function (e) {
+          const messageInputDom = document.querySelector('#chat-input');
           const message = messageInputDom.value;
           chatSocket.send(JSON.stringify({
               'message': message,
@@ -45,7 +30,7 @@
           messageInputDom.value = '';
        };
 
-       const boxName = JSON.parse(document.getElementById('room-name').textContent);
+       const boxName = JSON.parse(document.getElementById('chat-name-for-script').textContent);
 
        const chatSocket = new WebSocket(
           'ws://' +
@@ -72,6 +57,3 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
     </script>
-</body>
-
-</html>

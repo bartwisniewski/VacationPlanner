@@ -18,7 +18,7 @@ def create_chat(sender, instance, created, **kwargs):
 def create_chat(sender, instance, created, **kwargs):
     if created:
         new_chat = Chat.objects.create()
-        FriendsChat.objects.create(event=instance, chat=new_chat)
+        FriendsChat.objects.create(friends=instance, chat=new_chat)
 
 
 @receiver(post_delete, sender=EventChat)
