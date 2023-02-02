@@ -59,6 +59,14 @@ class MyUser(AbstractUser):
         except ObjectDoesNotExist:
             return None
 
+    @staticmethod
+    def get_by_name_or_none(username):
+        try:
+            return MyUser.objects.get(username=username)
+        except ObjectDoesNotExist:
+            pass
+        return None
+
 
 class SocialMedia(models.Model):
     name = models.CharField(max_length=30)

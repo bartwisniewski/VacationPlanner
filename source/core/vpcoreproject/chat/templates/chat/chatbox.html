@@ -1,10 +1,9 @@
 
     <div class="box">
-        {{ chat_id }}
             <form>
                 <div class="field">
                       <div class="control">
-                    <textarea class="textarea" id="chat-text" readonly rows="10"></textarea>
+                    <textarea class="textarea" id="chat-text" readonly rows="10">{{ chat_messages }}</textarea>
                           </div>
                 </div>
                 <div class="field">
@@ -16,7 +15,7 @@
 </div>
     {% comment %} Get data for username and chatbox name{% endcomment %}
     {{ request.user.username|json_script:"user_username" }}
-    {{ chat_name|json_script:"chat-name-for-script" }}
+    {{ chat_id|json_script:"chat-id-for-script" }}
 
     <script>
        const user_username = JSON.parse(document.getElementById('user_username').textContent);
@@ -30,7 +29,7 @@
           messageInputDom.value = '';
        };
 
-       const boxName = JSON.parse(document.getElementById('chat-name-for-script').textContent);
+       const boxName = JSON.parse(document.getElementById('chat-id-for-script').textContent);
 
        const chatSocket = new WebSocket(
           'ws://' +

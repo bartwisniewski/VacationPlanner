@@ -10,7 +10,21 @@ UserModel = get_user_model()
 
 
 class Chat(models.Model):
-    pass
+    @staticmethod
+    def get_or_none(chat_id):
+        try:
+            return Chat.objects.get(id=chat_id)
+        except ObjectDoesNotExist:
+            pass
+        return None
+
+    def last_x_messages(self, x):
+        return self.message_set.order_by("-updated").all()[:x]
+
+    def last_x_messages_as_text(self, x):
+        messages_strings = [str(message) for message in self.last_x_messages(x)]
+        printout = "\n".join(messages_strings)
+        return printout
 
 
 class Message(models.Model):
@@ -20,6 +34,11 @@ class Message(models.Model):
     message = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return (
+            f"{self.updated.strftime('%Y-%m-%d %H:%M')} | {self.sender}\n{self.message}"
+        )
 
 
 class EventChat(models.Model):
