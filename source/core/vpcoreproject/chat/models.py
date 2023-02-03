@@ -22,8 +22,10 @@ class Chat(models.Model):
         return self.message_set.order_by("-updated").all()[:x]
 
     def last_x_messages_as_text(self, x):
-        messages_strings = [str(message) for message in self.last_x_messages(x)]
-        printout = "\n".join(messages_strings)
+        messages_strings = [
+            message.str_for_chat() for message in self.last_x_messages(x)
+        ]
+        printout = "\n".join(messages_strings) + "\n"
         return printout
 
 
@@ -39,6 +41,9 @@ class Message(models.Model):
         return (
             f"{self.updated.strftime('%Y-%m-%d %H:%M')} | {self.sender}\n{self.message}"
         )
+
+    def str_for_chat(self):
+        return f"{self.sender}:{self.message}"
 
 
 class EventChat(models.Model):

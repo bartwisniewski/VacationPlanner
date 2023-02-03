@@ -133,6 +133,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "users/static/users"),
     os.path.join(BASE_DIR, "events/static/events"),
+    os.path.join(BASE_DIR, "chat/static/chat"),
 )
 
 # Default primary key field type

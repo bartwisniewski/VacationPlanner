@@ -1,9 +1,4 @@
 {% extends 'base.html' %}
-
-{% block scripts %}
-    {% include 'users/user_form_scripts.html' %}
-{% endblock %}
-1
 {% block content %}
 <div class="section">
 	{% include 'users/user_form.html' with submit_text='Register' %}
@@ -11,4 +6,7 @@
       <p class="mr-1">If you already have an account: </p> <a class="is-link" href="{% url 'login' %}">Login</a>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+    {% include 'users/user_form_scripts.html' %}
 {% endblock %}
