@@ -10,9 +10,10 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from friends.models import Friends, UserToFriends, JoinRequest
 from friends.helpers import UserToFriendsUpdateManager
 from members.helpers import SingleObjectUserRoleRequiredView, owner_only
+from chat.views import ChatMixin
 
 
-class MyFriendsListView(LoginRequiredMixin, ListView):
+class MyFriendsListView(LoginRequiredMixin, ListView, ChatMixin):
 
     model = Friends
     paginate_by = 10
@@ -27,6 +28,7 @@ class MyFriendsListView(LoginRequiredMixin, ListView):
         context["other_requests"] = JoinRequest.objects.filter(
             friends__in=my_admin_groups
         )
+        self.add_chat_context(context, self.request)
         return context
 
 

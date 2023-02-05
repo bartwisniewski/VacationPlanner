@@ -104,7 +104,6 @@ class EventDetailView(UserPassesTestMixin, DetailView, ChatMixin):
         context["status_display"] = self.object.get_status_display()
         context["participants_count"] = self.object.get_participants_count()
         self.add_chat_context(context, self.request)
-        print(context["chat_messages"])
         return context
 
     def get(self, request, *args, **kwargs):

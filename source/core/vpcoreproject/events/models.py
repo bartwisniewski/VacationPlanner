@@ -44,7 +44,7 @@ class Event(models.Model):
         return None
 
     @staticmethod
-    def user_events(user: UserModel):
+    def filter_by_user(user: UserModel):
         return Event.objects.filter(usertoevent__user=user)
 
     @staticmethod

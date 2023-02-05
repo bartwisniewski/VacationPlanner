@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms import formset_factory
 
@@ -7,7 +8,7 @@ from users.models import MyUser
 from friends.forms import UserFriendsRoleForm
 from members.models import Member
 
-# Create your models here.
+UserModel = get_user_model()
 
 
 class Friends(models.Model):
@@ -23,6 +24,10 @@ class Friends(models.Model):
         except ObjectDoesNotExist:
             messages.warning(request, f"Friends group with id {id} does not exist")
         return None
+
+    @staticmethod
+    def filter_by_user(user: UserModel):
+        return Friends.objects.filter(usertofriends__user=user)
 
     def test_user_role(self, user, role):
         try:

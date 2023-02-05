@@ -52,9 +52,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def chatbox_message(self, event):
         message = event["message"]
         username = event["username"]
-
-        send_message = f"{username}: {message}"
-
+        send_message = Message.message_format_for_chat(username, message)
         await self.send(
             text_data=json.dumps(
                 {

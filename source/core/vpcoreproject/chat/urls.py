@@ -3,5 +3,5 @@ from chat.views import chat_box_standalone_view
 
 
 urlpatterns = [
-    path("<str:chat_box_name>/", chat_box_standalone_view, name="chat-standalone"),
+    path("<chat_id>/", chat_box_standalone_view, name="chat-standalone"),
 ]

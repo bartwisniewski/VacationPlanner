@@ -42,8 +42,12 @@ class Message(models.Model):
             f"{self.updated.strftime('%Y-%m-%d %H:%M')} | {self.sender}\n{self.message}"
         )
 
+    @staticmethod
+    def message_format_for_chat(username: str, message: str) -> str:
+        return f"{username}:{message}"
+
     def str_for_chat(self):
-        return f"{self.sender}:{self.message}"
+        return Message.message_format_for_chat(str(self.sender), str(self.message))
 
 
 class EventChat(models.Model):
@@ -51,12 +55,18 @@ class EventChat(models.Model):
     event = models.OneToOneField(Event, on_delete=models.CASCADE)
 
     @staticmethod
-    def get_or_warning(owner, request):
+    def get_or_warning(parent_object, request):
         try:
-            return EventChat.objects.get(event=owner)
+            return EventChat.objects.get(event=parent_object)
         except ObjectDoesNotExist:
-            messages.warning(request, f"EventChat of Event {owner} does not exist")
+            messages.warning(
+                request, f"EventChat of Event {parent_object} does not exist"
+            )
         return None
+
+    @staticmethod
+    def filter_by_parent_object(parent_object_list):
+        return EventChat.objects.filter(event__in=parent_object_list)
 
 
 class FriendsChat(models.Model):
@@ -64,11 +74,15 @@ class FriendsChat(models.Model):
     friends = models.OneToOneField(Friends, on_delete=models.CASCADE)
 
     @staticmethod
-    def get_or_warning(owner, request):
+    def get_or_warning(parent_object, request):
         try:
-            return FriendsChat.objects.get(friends=owner)
+            return FriendsChat.objects.get(friends=parent_object)
         except ObjectDoesNotExist:
             messages.warning(
-                request, f"FriendsChat of Friends group {owner} does not exist"
+                request, f"FriendsChat of Friends group {parent_object} does not exist"
             )
         return None
+
+    @staticmethod
+    def filter_by_parent_object(parent_object_list):
+        return FriendsChat.objects.filter(friends__in=parent_object_list)

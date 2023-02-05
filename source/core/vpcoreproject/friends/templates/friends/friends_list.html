@@ -4,42 +4,49 @@ My friends
 {% endblock %}
 {% block content %}
 <div class="section">
-    <div class="box">
-        {% if exception %}
-            <p>{{ exception }}</p>
-        {% endif %}
-        <h2>My friends:</h2>
-        <ul>
-            {% for friends in object_list %}
-                <li><span><a href="{% url 'friends-edit' friends.id %}">{{ friends.nickname }}</a></span>
-                    <a href="{% url 'friends-delete' friends.id %}">x</a>
-                    <a href="{% url 'friends-leave' friends.id %}">-></a>
-                </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'friends-create' %}">+</a>
-        <a href="{% url 'friends-find' %}">find more</a>
-        {% if my_requests %}
-        <hr class="navbar-divider">
-        <h2>My requests:</h2>
-        <ul>
-            {% for request in my_requests %}
-                <li>{{request.friends}}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% if other_requests %}
-        <hr class="navbar-divider">
-        <h2>Requests to my friends:</h2>
-        <ul>
-            {% for request in other_requests %}
-                <li><span>{{request.user}} wants to join {{request.friends}}</span>
-                    <a href="{% url 'answer-join-request' request.id %}?accept=True">OK</a>
-                    <a href="{% url 'answer-join-request' request.id %}?accept=False">X</a>
-                </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+    <div class="columns">
+        <div class="column is-10">
+            <div class="box">
+                {% if exception %}
+                    <p>{{ exception }}</p>
+                {% endif %}
+                <h2>My friends:</h2>
+                <ul>
+                    {% for friends in object_list %}
+                        <li><span><a href="{% url 'friends-edit' friends.id %}">{{ friends.nickname }}</a></span>
+                            <a href="{% url 'friends-delete' friends.id %}">x</a>
+                            <a href="{% url 'friends-leave' friends.id %}">-></a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'friends-create' %}">+</a>
+                <a href="{% url 'friends-find' %}">find more</a>
+                {% if my_requests %}
+                <hr class="navbar-divider">
+                <h2>My requests:</h2>
+                <ul>
+                    {% for request in my_requests %}
+                        <li>{{request.friends}}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if other_requests %}
+                <hr class="navbar-divider">
+                <h2>Requests to my friends:</h2>
+                <ul>
+                    {% for request in other_requests %}
+                        <li><span>{{request.user}} wants to join {{request.friends}}</span>
+                            <a href="{% url 'answer-join-request' request.id %}?accept=True">OK</a>
+                            <a href="{% url 'answer-join-request' request.id %}?accept=False">X</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="column">
+            {% include 'chat/chatbox.html' %}
+        </div>
     </div>
 </div>
 
