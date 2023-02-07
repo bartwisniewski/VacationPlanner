@@ -1,0 +1,9 @@
+<p>Select chat: </p>
+<ul>
+    {% for chat in chats %}
+        <li>
+            <a href="{{ request.path}}?chat={{chat.chat.id}}">{{chat.parent}}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

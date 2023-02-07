@@ -1,7 +1,4 @@
 {% extends 'events/event_detail.html' %}
-{% block scripts %}
-    {% include 'events/event_detail_1_scripts.html' %}
-{% endblock %}
 {% block content_event %}
         <h2>{{object.start}}-{{object.end}}</h2>
         {% if proposals %}
@@ -53,4 +50,7 @@
                     {% endfor %}
                 </ul>
         {% endif %}
+{% endblock %}
+{% block scripts_event %}
+    {% include 'events/event_detail_1_scripts.html' %}
 {% endblock %}

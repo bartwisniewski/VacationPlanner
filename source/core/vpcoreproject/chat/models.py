@@ -10,6 +10,8 @@ UserModel = get_user_model()
 
 
 class Chat(models.Model):
+    related_chats = ["eventchat", "friendschat"]
+
     @staticmethod
     def get_or_none(chat_id):
         try:
@@ -27,6 +29,17 @@ class Chat(models.Model):
         ]
         printout = "\n".join(messages_strings) + "\n"
         return printout
+
+    def get_parent_object(self):
+        for related_chat_name in self.related_chats:
+            try:
+                related_chat_object = getattr(self, related_chat_name)
+                return related_chat_object.parent_object
+            except getattr(Chat, related_chat_name).RelatedObjectDoesNotExist:
+                print("does not exist")
+        return None
+
+    parent_object = property(get_parent_object)
 
 
 class Message(models.Model):
@@ -68,6 +81,11 @@ class EventChat(models.Model):
     def filter_by_parent_object(parent_object_list):
         return EventChat.objects.filter(event__in=parent_object_list)
 
+    def get_parent_object(self):
+        return self.event
+
+    parent_object = property(get_parent_object)
+
 
 class FriendsChat(models.Model):
     chat = models.OneToOneField(Chat, on_delete=models.CASCADE)
@@ -86,3 +104,8 @@ class FriendsChat(models.Model):
     @staticmethod
     def filter_by_parent_object(parent_object_list):
         return FriendsChat.objects.filter(friends__in=parent_object_list)
+
+    def get_parent_object(self):
+        return self.friends
+
+    parent_object = property(get_parent_object)

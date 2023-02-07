@@ -2,9 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 
 from events.models import Event, UserToEvent
+from chat.views import ChatMixin
 
 
-class MyEventsListView(LoginRequiredMixin, ListView):
+class MyEventsListView(LoginRequiredMixin, ListView, ChatMixin):
 
     model = Event
     paginate_by = 10
@@ -19,6 +20,7 @@ class MyEventsListView(LoginRequiredMixin, ListView):
         context["friends_events"] = my_friends_events.difference(my_events).order_by(
             "-id"
         )
+        self.add_chat_context(context, self.request)
         return context
 
 

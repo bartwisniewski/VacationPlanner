@@ -1,0 +1,11 @@
+{% if chat_id %}
+    {% if chats %}
+        {{ chat_parent }}
+    {% endif %}
+    {% include 'chat/chatbox.html' %}
+    {% if chats %}
+        <a href="{{ request.path}}">Change chat</a>
+    {% endif %}
+{% elif chats %}
+    {% include 'chat/chat_list.html' %}
+{% endif %}

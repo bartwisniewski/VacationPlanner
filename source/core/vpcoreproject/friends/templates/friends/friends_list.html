@@ -45,9 +45,12 @@ My friends
             </div>
         </div>
         <div class="column">
-            {% include 'chat/chatbox.html' %}
+            {% include 'chat/chat.html' %}
         </div>
     </div>
 </div>
 
+{% endblock %}
+{% block scripts %}
+    {% include 'chat/chat_scripts.html' %}
 {% endblock %}
