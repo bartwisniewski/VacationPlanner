@@ -13,12 +13,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from users.forms import MyUserCreationForm, MyUserUpdateForm, FamilySizeForm
 from users.helpers import get_modelform_data_from_post
 
-# Create your views here.
+from chat.views import ChatMixin
 
 User = get_user_model()
 
 
-class DashboardView(TemplateView):
+class DashboardView(TemplateView, ChatMixin):
     template_name = "users/dashboard.html"
 
     def get(self, request, *args, **kwargs):
@@ -26,7 +26,7 @@ class DashboardView(TemplateView):
         context = self.get_context_data(**kwargs)
         if request.user.is_authenticated:
             context["joined"] = request.user.date_joined.strftime("%m/%d/%Y")
-
+            self.add_chat_context(context, self.request)
         return self.render_to_response(context)
 
 

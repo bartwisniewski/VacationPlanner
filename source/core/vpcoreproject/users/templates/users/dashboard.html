@@ -4,14 +4,23 @@ Welcome page
 {% endblock %}
 {% block content %}
 <div class="section">
-    <div class="box">
-      {% if user.is_authenticated %}
-        <h1>Hi {{user.username}}</h1>
-        <h2>You’ve been with us since the: {{joined}} </h2>
-      {% else %}
-        <h1>Welcome stranger, please log in</h1>
-      {% endif %}
+    <div class="columns">
+        <div class="column is-10">
+            <div class="box">
+              {% if user.is_authenticated %}
+                <h1>Hi {{user.username}}</h1>
+                <h2>You’ve been with us since the: {{joined}} </h2>
+              {% else %}
+                <h1>Welcome stranger, please log in</h1>
+              {% endif %}
+            </div>
+        </div>
+        <div class="column">
+            {% include 'chat/chat.html' %}
+        </div>
     </div>
 </div>
-
+{% endblock %}
+{% block scripts %}
+    {% include 'chat/chat_scripts.html' %}
 {% endblock %}

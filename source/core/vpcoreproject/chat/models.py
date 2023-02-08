@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.db.models import Q
+
 
 from events.models import Event
 from friends.models import Friends
@@ -31,13 +33,21 @@ class Chat(models.Model):
         return printout
 
     def get_parent_object(self):
-        for related_chat_name in self.related_chats:
+        for related_chat_name in Chat.related_chats:
             try:
                 related_chat_object = getattr(self, related_chat_name)
                 return related_chat_object.parent_object
             except getattr(Chat, related_chat_name).RelatedObjectDoesNotExist:
                 print("does not exist")
         return None
+
+    @staticmethod
+    def filter_by_user(user):
+        event_chats = EventChat.filter_by_user(user)
+        friends_chats = FriendsChat.filter_by_user(user)
+        return Chat.objects.filter(
+            Q(eventchat__in=event_chats) | Q(friendschat__in=friends_chats)
+        )
 
     parent_object = property(get_parent_object)
 
@@ -81,6 +91,11 @@ class EventChat(models.Model):
     def filter_by_parent_object(parent_object_list):
         return EventChat.objects.filter(event__in=parent_object_list)
 
+    @staticmethod
+    def filter_by_user(user):
+        user_events = Event.filter_by_user(user)
+        return EventChat.objects.filter(event__in=user_events)
+
     def get_parent_object(self):
         return self.event
 
@@ -104,6 +119,11 @@ class FriendsChat(models.Model):
     @staticmethod
     def filter_by_parent_object(parent_object_list):
         return FriendsChat.objects.filter(friends__in=parent_object_list)
+
+    @staticmethod
+    def filter_by_user(user):
+        user_friends = Friends.filter_by_user(user)
+        return FriendsChat.objects.filter(friends__in=user_friends)
 
     def get_parent_object(self):
         return self.friends
