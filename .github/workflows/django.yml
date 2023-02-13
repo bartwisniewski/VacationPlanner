@@ -27,7 +27,8 @@ jobs:
         pip install -r source/requirements.txt
     - name: Run Tests
       env:
-        DB_DB: mydb
+        DB_ENGINE: django.db.backends.sqlite3
+        DB_DB: source/vpcoreproject/db.sqlite3
         DB_USER: userdb
         DB_PASSWORD: password
         DB_HOST: 127.0.0.1

@@ -8,6 +8,7 @@ services:
       - DJANGO_SETTINGS_MODULE=vpcoreproject.settings
       - CORE_HOST_NAME=${CORE_NAME}
       - CORE_PORT=${CORE_PORT}
+      - DB_ENGINE=${CORE_DB_ENGINE}
       - DB_HOST=${CORE_DB_NAME}
       - DB_DB=${POSTGRES_DB}
       - DB_USER=${POSTGRES_USER}
