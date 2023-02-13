@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}
+    Chatbox
+{% endblock %}
+{% block content %}
+<div class="section">
+    <h1 class="title">Chatbox</h1>
+    {% include 'chat/chatbox.html' %}
+</div>
+{% endblock %}
+{% block scripts %}
+    {% include 'chat/chat_scripts.html' %}
+{% endblock %}

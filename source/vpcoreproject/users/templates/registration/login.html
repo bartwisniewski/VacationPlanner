@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="section">
+    <div class="box">
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+        <div class="field">
+            <label class="label">{{ form.username.label_tag }}</label>
+            <div class="control">{{ form.username }}</div>
+        </div>
+        <div class="field">
+            <label class="label">{{ form.password.label_tag }}</label>
+            <div class="control">{{ form.password }}</div>
+        </div>
+        {% if form.errors %}
+            <p class="help is-danger">Your username and password didn't match. Please try again.</p>
+        {% endif %}
+        <div class="control">
+            <button type="submit" class="button is-primary">Login</button>
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+        </div>
+    <div class="buttons">
+        <p><span class="mr-1">If you don't have an account:</span><a class="is-link" href="{% url 'register' %}">Register</a></p>
+    </div>
+    <div class="buttons">
+        <p><span class="mr-1">Forgot password?:</span><a class="is-link" href="{% url 'password_reset' %}">Reset!</a></p>
+    </div>
+</div>
+
+
+{% endblock %}
