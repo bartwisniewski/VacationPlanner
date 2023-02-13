@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r source/core/requirements.txt
+        pip install -r source/requirements.txt
     - name: Run Tests
       run: |
-        python source/core/vpcoreproject/manage.py test users.tests.views
+        python source/vpcoreproject/manage.py test users.tests.views
