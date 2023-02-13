@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "vpcoreproject.wsgi.application"
+WSGI_APPLICATION = os.environ["WSGI_APPLICATION"]  # "vpcoreproject.wsgi.application"
 
 ASGI_APPLICATION = "vpcoreproject.asgi.application"
 
