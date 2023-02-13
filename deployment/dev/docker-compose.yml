@@ -1,0 +1,53 @@
+services:
+  core:
+    build:
+      context: ../../source
+      dockerfile: Dockerfile
+    container_name: ${CORE_NAME}
+    environment:
+      - DJANGO_SETTINGS_MODULE=vpcoreproject.settings
+      - CORE_HOST_NAME=${CORE_NAME}
+      - CORE_PORT=${CORE_PORT}
+      - DB_HOST=${CORE_DB_NAME}
+      - DB_DB=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        python3 manage.py makemigrations
+        python3 manage.py migrate
+        python3 manage.py runserver 0.0.0.0:${CORE_PORT}
+
+    depends_on:
+      core-db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks:
+      - network_front
+      - network_back
+
+  core-db:
+    image: postgres:13
+    container_name: ${CORE_DB_NAME}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - ./core-db/:/var/lib/postgresql/data/
+    networks:
+      - network_back
+
+networks:
+  network_front:
+    driver: bridge
+  network_back:
+    driver: bridge
+    internal: true
