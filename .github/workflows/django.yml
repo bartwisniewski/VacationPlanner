@@ -26,5 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r source/requirements.txt
     - name: Run Tests
+      env:
+        DB_DB: mydb
+        DB_USER: userdb
+        DB_PASSWORD: password
+        DB_HOST: dbhostname
       run: |
         python source/vpcoreproject/manage.py test users.tests.views
