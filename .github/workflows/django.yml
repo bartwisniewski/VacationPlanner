@@ -30,6 +30,6 @@ jobs:
         DB_DB: mydb
         DB_USER: userdb
         DB_PASSWORD: password
-        DB_HOST: dbhostname
+        DB_HOST: 127.0.0.1
       run: |
         python source/vpcoreproject/manage.py test users.tests.views
