@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-@-+!s62%kt45folq+n7ve$01o6f=xno%=6e+&+#_d5#!%i3c3i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"]]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -86,14 +86,11 @@ CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ["DB_ENGINE"],
-        "NAME": os.environ["DB_DB"],
-        "USER": os.environ["DB_USER"],
-        "PASSWORD": os.environ["DB_PASSWORD"],
-        "HOST": os.environ["DB_HOST"],
-        "PORT": os.environ["DB_PORT"],
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -129,7 +126,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = (
