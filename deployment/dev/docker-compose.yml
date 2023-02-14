@@ -6,6 +6,7 @@ services:
     container_name: ${CORE_NAME}
     environment:
       - DJANGO_SETTINGS_MODULE=vpcoreproject.settings
+      - ALLOWED_HOSTS=${CORE_ALLOWED_HOSTS}
       - CORE_HOST_NAME=${CORE_NAME}
       - CORE_PORT=${CORE_PORT}
       - DB_ENGINE=${CORE_DB_ENGINE}
@@ -13,7 +14,7 @@ services:
       - DB_DB=${POSTGRES_DB}
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_PORT="${POSTGRES_PORT}
+      - DB_PORT=${POSTGRES_PORT}
     entrypoint: [ "/bin/sh", "-c" ]
     command:
       - |
