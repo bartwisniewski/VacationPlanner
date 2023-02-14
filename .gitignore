@@ -137,3 +137,8 @@ sent_emails/
 
 # Lokal DB container
 core-db/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
