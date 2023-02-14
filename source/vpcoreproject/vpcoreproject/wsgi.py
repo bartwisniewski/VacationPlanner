@@ -12,7 +12,7 @@ import sys
 
 from django.core.wsgi import get_wsgi_application
 
-sys.path.append("/var/app/current/source/vpcoreproject")
+# sys.path.append("/var/app/current/source/vpcoreproject")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vpcoreproject.settings")
 
 application = get_wsgi_application()
