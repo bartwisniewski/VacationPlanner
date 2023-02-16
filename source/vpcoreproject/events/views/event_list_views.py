@@ -30,7 +30,10 @@ class MissingEventsListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        my_friends_events = Event.objects.filter(
+        event_qs = Event.objects.select_related("friends").prefetch_related(
+            "friends__usertofriends"
+        )
+        my_friends_events = event_qs.filter(
             friends__usertofriends__user=self.request.user
         )
         my_events = Event.filter_by_user(self.request.user)
