@@ -6,7 +6,7 @@ awsebcli==3.20.3
 bcrypt==4.0.1
 blessed==1.20.0
 boto3==1.26.72
-botocore==1.23.41
+botocore==1.23.54
 cached-property==1.5.2
 cachetools==5.2.0
 cement==2.8.2
