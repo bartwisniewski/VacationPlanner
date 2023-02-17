@@ -1,0 +1,4 @@
+artifacts:
+  files:
+    - '**/*'
+  base-directory: 'source/vpcoreproject'
