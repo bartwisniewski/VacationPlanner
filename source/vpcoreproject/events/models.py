@@ -82,7 +82,9 @@ class Event(models.Model):
         return formset
 
     def get_participants_count(self):
-        related_users = self.usertoevent_set.all()
+        related_users = self.usertoevent_set.select_related("user").select_related(
+            "user__default_family"
+        )
         participants_count = FamilySize(adults=0, children=0, infants=0)
 
         for user_in_event in related_users:

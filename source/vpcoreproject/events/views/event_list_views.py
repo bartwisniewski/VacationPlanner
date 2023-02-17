@@ -22,17 +22,3 @@ class MyEventsListView(LoginRequiredMixin, ListView, ChatMixin):
         )
         self.add_chat_context(context, self.request)
         return context
-
-
-class MissingEventsListView(LoginRequiredMixin, ListView):
-
-    model = Event
-    paginate_by = 10
-
-    def get_queryset(self):
-        my_friends_events = Event.objects.filter(
-            friends__usertofriends__user=self.request.user
-        )
-        my_events = Event.filter_by_user(self.request.user)
-        missing_events = my_friends_events.difference(my_events)
-        return missing_events.order_by("-id")
