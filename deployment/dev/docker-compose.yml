@@ -21,14 +21,16 @@ services:
         python3 manage.py makemigrations
         python3 manage.py migrate
         python3 manage.py runserver 0.0.0.0:${CORE_PORT}
-
+    healthcheck:
+      test: curl --fail http://0.0.0.0:${CORE_PORT}/ || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
     depends_on:
       core-db:
         condition: service_healthy
-    ports:
-      - "8000:8000"
     networks:
-      - network_front
       - network_back
 
   core-db:
@@ -47,6 +49,21 @@ services:
       - ./core-db/:/var/lib/postgresql/data/
     networks:
       - network_back
+
+  nginx:
+    build:
+      context: ../../nginx/local
+      dockerfile: Dockerfile
+    environment:
+      - CORE_HOST_NAME=${CORE_NAME}
+      - CORE_PORT=${CORE_PORT}
+    ports:
+      - "8001:80"
+    networks:
+      - network_front
+      - network_back
+    depends_on:
+      - core
 
 networks:
   network_front:
