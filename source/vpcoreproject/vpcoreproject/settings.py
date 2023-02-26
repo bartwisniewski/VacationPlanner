@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     "vpcore-prod.eu-central-1.elasticbeanstalk.com",
     "172.31.11.202",
     "0.0.0.0",
+    "127.0.0.1",
 ]
 
 
@@ -146,13 +147,13 @@ if "AWS_STORAGE_BUCKET_NAME" in os.environ:
     # s3 static settings
     AWS_LOCATION = "static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 else:
     STATIC_URL = "static/"
-    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
