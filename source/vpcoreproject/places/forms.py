@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 
 from places.models import Place, Owner, PlaceSize
 from places.helpers import get_field_value_from_related_object
@@ -70,3 +70,17 @@ class PlaceForm(ModelForm):
     class Meta:
         model = Place
         exclude = ["owner", "capacity", "size", "created_by"]
+
+
+class DateInput(forms.DateInput):
+    input_type = "date"
+
+
+class PlaceScrapForm(Form):
+    template_name = "webscrapper/form_snippet.html"
+    region = forms.CharField(label="region", max_length=100)
+    adults = forms.IntegerField(label="adults", initial=1)
+    children = forms.IntegerField(label="children", initial=0)
+    infants = forms.IntegerField(label="infants", initial=0)
+    start = forms.DateField(label="start date", widget=DateInput())
+    end = forms.DateField(label="end date", widget=DateInput())

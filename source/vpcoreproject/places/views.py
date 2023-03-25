@@ -6,10 +6,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
-from places.forms import PlaceForm
+from places.forms import PlaceForm, PlaceScrapForm
 from places.models import Place
 from events.models import Event, UserToEvent, PlaceProposal
 
@@ -120,3 +120,27 @@ class PlaceUpdateView(UserPassesTestMixin, UpdateView):
             form_class = self.get_form_class()
         form_kwargs = self.get_form_kwargs()
         return form_class(**form_kwargs)
+
+
+class PlaceScrapView(FormView):
+    template_name = "places/place_scrap.html"
+    form_class = PlaceScrapForm
+    success_url = reverse_lazy("place-create")
+
+    def form_valid(self, form):
+        # start new task by sending request to the scrapper
+        # get task_id from response
+        task_id = "abddsadsad"
+        success_url = reverse_lazy("place-scrap-result", kwargs={"task_id": task_id})
+        return super().form_valid(form)
+
+
+class PlaceScrapResultView(TemplateView):
+    template_name = "places/place_scrap_result.html"
+
+    def get(self, request, *args, **kwargs):
+        # get task result
+        # if task ready display data
+        context = self.get_context_data(**kwargs)
+
+        return self.render_to_response(context)
