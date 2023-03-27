@@ -5,15 +5,23 @@
 
 {% block content %}
 <div class="section">
-    {{event}}
-    <form method="post">{% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Save">
-    </form>
-    {% if request.GET.event %}
-        <a href="{% url 'event-detail' request.GET.event %}"><</a>
-    {% else %}
-        <a href="{% url 'places-list' %}"><</a>
+    <div class="box">
+    <h2>task: {{task_id}}</h2>
+    {% if done %}
+        {% if ok %}
+            <h2>Scrap results:</h2>
+            <ul>
+                {% for place in result %}
+                <li>
+                    <span>{{ place.name }}</span><span>{{ place.url }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Scrap completed with failure</p>
+        {% endif %}
     {% endif %}
+    <a href="{% url 'place-scrap-list' %}">all</a>
+    </div>
 </div>
 {% endblock %}

@@ -77,7 +77,7 @@ class DateInput(forms.DateInput):
 
 
 class PlaceScrapForm(Form):
-    template_name = "webscrapper/form_snippet.html"
+    template_name = "places/form_snippet.html"
     region = forms.CharField(label="region", max_length=100)
     adults = forms.IntegerField(label="adults", initial=1)
     children = forms.IntegerField(label="children", initial=0)

@@ -8,12 +8,9 @@
     {{event}}
     <form method="post">{% csrf_token %}
         {{ form }}
-        <input type="submit" value="Save">
+        <input type="submit" value="Start">
     </form>
-    {% if request.GET.event %}
-        <a href="{% url 'event-detail' request.GET.event %}"><</a>
-    {% else %}
-        <a href="{% url 'places-list' %}"><</a>
-    {% endif %}
+    <a href="{% url 'places-list' %}"><</a>
+    <a href="{% url 'place-scrap-list' %}">old</a>
 </div>
 {% endblock %}

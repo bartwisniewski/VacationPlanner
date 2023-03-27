@@ -1,8 +1,12 @@
 from django.db import models
 from django.db.models import SET_NULL, Q, F
 from django.utils.translation import gettext_lazy as _
-from users.models import FamilySize
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 from django.contrib.auth import get_user_model
+
+from users.models import FamilySize
+
 
 UserModel = get_user_model()
 
@@ -114,3 +118,30 @@ class Place(models.Model):
             capacity__adults__gte=max_capacity.adults, capacity_total__gte=total
         )
         return queryset.filter(compiled_filter)
+
+
+class PlaceScrap(models.Model):
+    class ScrapStatus(models.IntegerChoices):
+        PENDING = 0, _("PENDING")
+        SUCCESS = 3, _("SUCCESS")
+        FAILURE = 4, _("FAILURE")
+
+    task_id = models.CharField(max_length=40)
+    status = models.IntegerField(
+        choices=ScrapStatus.choices, default=ScrapStatus.PENDING
+    )
+    created_by = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True)
+
+    @staticmethod
+    def user_scraps(user: UserModel):
+        return PlaceScrap.objects.filter(created_by=user)
+
+    @staticmethod
+    def get_or_warning(task_id, request):
+        try:
+            return PlaceScrap.objects.get(task_id=task_id)
+        except ObjectDoesNotExist:
+            messages.warning(
+                request, f"Scrapping job with task_id {task_id} does not exist"
+            )
+        return None

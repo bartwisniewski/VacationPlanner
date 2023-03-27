@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+My events
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="box">
+        {% if exception %}
+            <p>{{ exception }}</p>
+        {% endif %}
+        <h2>My scraps:</h2>
+        <ul>
+            {% for scrap in object_list %}
+            <li>
+                <span><a href="{% url 'place-scrap-result' scrap.task_id %}">{{ scrap.task_id }}</a></span>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'places-list' %}"><</a>
+        <a href="{% url 'place-scrap' %}">search web</a>
+    </div>
+</div>
+
+{% endblock %}
