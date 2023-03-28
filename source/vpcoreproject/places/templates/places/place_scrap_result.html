@@ -1,26 +1,31 @@
 {% extends 'base.html' %}
 
 {% block scripts %}
+    {% if not done %}
+        {% include 'places/place_scrap_scripts.html' %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="section">
     <div class="box">
     <h2>task: {{task_id}}</h2>
-    {% if done %}
-        {% if ok %}
-            <h2>Scrap results:</h2>
-            <ul>
-                {% for place in result %}
-                <li>
-                    <span>{{ place.name }}</span><span>{{ place.url }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Scrap completed with failure</p>
-        {% endif %}
-    {% endif %}
+        <div id="results">
+            {% if done %}
+                {% if ok %}
+                    <h2>Scrap results:</h2>
+                    <ul>
+                    {% for place in result %}
+                        <li><a href="{{ place.url }}"><span>{{ place.name }}</span></a></li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Scrap completed with failure</p>
+                {% endif %}
+            {% else %}
+                <h2 id="waiting-text">waiting for results</h2>
+            {% endif %}
+        </div>
     <a href="{% url 'place-scrap-list' %}">all</a>
     </div>
 </div>

@@ -133,7 +133,6 @@ class PlaceScrapView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         task_id = scrapper_logic.new_scrap(form)
-        print(f"task_id {task_id}")
         if task_id:
             self.success_url = reverse_lazy(
                 "place-scrap-result", kwargs={"task_id": task_id}
@@ -146,6 +145,7 @@ class PlaceScrapView(LoginRequiredMixin, FormView):
 
 class PlaceScrapGetData(APIView):
     def get(self, request, task_id, format=None):
+        print("rest api working")
         scrapper_result = scrapper_logic.get_result(task_id)
         return Response(data=scrapper_result, status=200)
 
@@ -171,14 +171,15 @@ class PlaceScrapResultView(UserPassesTestMixin, TemplateView):
         return HttpResponseRedirect(PlaceScrapResultView.reject_url)
 
     def get_context_data(self, **kwargs):
-        print("get context data")
         context = super().get_context_data(**kwargs)
         task_id = self.object.task_id
         if task_id:
             context["task_id"] = task_id
+            context["endpoint"] = reverse_lazy(
+                "place-scrap-api", kwargs={"task_id": task_id}
+            )
             result = scrapper_logic.get_result(task_id)
             context.update(result)
-            print(result)
         return context
 
 
