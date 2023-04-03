@@ -5,7 +5,6 @@ function get_data() {
 	setTimeout(async function() {
 		const response = await fetch(endpoint);
 		const data = await response.json();
-		console.log(data);
 		if(!data.done){
 		    render_waiting();
 		    get_data();
@@ -22,7 +21,7 @@ function get_data() {
 function render_waiting(){
     const waiting_text = document.getElementById('waiting-text');
     waiting_text.textContent = "waiting for results";
-    waiting_text.className = waiting_state ? "has-text-black" : "hast-text-light";
+    waiting_text.className = waiting_state ? "has-text-white" : "hast-text-light";
     waiting_state = !waiting_state;
 }
 
@@ -51,9 +50,13 @@ function render_result(result){
 }
 
 function render_error(){
+    const waiting_text = document.getElementById('waiting-text');
     const results_div = document.getElementById('results');
+    results_div.removeChild(waiting_text);
     const err = document.createElement('p');
-    err.innerHTML = 'Scrapping ended with error'
+    err.innerHTML = 'Scrap ended with failure';
+    err.className = "has-text-danger";
+    results_div.appendChild(err);
 }
 
 get_data();

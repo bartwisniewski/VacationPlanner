@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-My events
+Web search results
 {% endblock %}
 {% block content %}
 <div class="section">
@@ -8,7 +8,7 @@ My events
         {% if exception %}
             <p>{{ exception }}</p>
         {% endif %}
-        <h2>My scraps:</h2>
+        <h2>Last searches:</h2>
         <ul>
             {% for scrap in object_list %}
             <li>
@@ -16,8 +16,10 @@ My events
             </li>
             {% endfor %}
         </ul>
-        <a href="{% url 'places-list' %}"><</a>
-        <a href="{% url 'place-scrap' %}">search web</a>
+        <hr class="navbar-divider">
+        <p><a href="{% url 'place-scrap' %}">|SEARCH WEB|</a></p>
+        <hr class="navbar-divider">
+        <p><a href="{% url 'places-list' %}">|MY PLACES|</a></p>
     </div>
 </div>
 
