@@ -6,11 +6,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import View, TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
-from places.forms import PlaceForm
-from places.models import Place
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from places.forms import PlaceForm, PlaceScrapForm
+from places.scrapper import logic as scrapper_logic
+from places.models import Place, PlaceScrap
 from events.models import Event, UserToEvent, PlaceProposal
 
 
@@ -120,3 +124,69 @@ class PlaceUpdateView(UserPassesTestMixin, UpdateView):
             form_class = self.get_form_class()
         form_kwargs = self.get_form_kwargs()
         return form_class(**form_kwargs)
+
+
+class PlaceScrapView(LoginRequiredMixin, FormView):
+    template_name = "places/place_scrap.html"
+    form_class = PlaceScrapForm
+    success_url = reverse_lazy("place-scrap-list")
+
+    def form_valid(self, form):
+        task_id = scrapper_logic.new_scrap(form)
+        if task_id:
+            self.success_url = reverse_lazy(
+                "place-scrap-result", kwargs={"task_id": task_id}
+            )
+            PlaceScrap(task_id=task_id, created_by=self.request.user).save()
+        else:
+            messages.warning(self.request, "scrapping could not be started")
+        return super().form_valid(form)
+
+
+class PlaceScrapGetData(APIView):
+    def get(self, request, task_id, format=None):
+        print("rest api working")
+        scrapper_result = scrapper_logic.get_result(task_id)
+        return Response(data=scrapper_result, status=200)
+
+
+class PlaceScrapResultView(UserPassesTestMixin, TemplateView):
+    model = PlaceScrap
+    template_name = "places/place_scrap_result.html"
+    reject_url = reverse_lazy("place-srap-list")
+    permission_denied_message = f"you have not ordered this scrap"
+
+    def get_object(self):
+        task_id = self.kwargs.get("task_id", None)
+        return PlaceScrap.get_or_warning(task_id=task_id, request=self.request)
+
+    def test_func(self):
+        self.object = self.get_object()
+        if self.object:
+            return self.object.created_by == self.request.user
+        return False
+
+    def handle_no_permission(self):
+        messages.warning(self.request, self.permission_denied_message)
+        return HttpResponseRedirect(PlaceScrapResultView.reject_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        task_id = self.object.task_id
+        if task_id:
+            context["task_id"] = task_id
+            context["endpoint"] = reverse_lazy(
+                "place-scrap-api", kwargs={"task_id": task_id}
+            )
+            result = scrapper_logic.get_result(task_id)
+            context.update(result)
+        return context
+
+
+class MyPlaceScrapListView(LoginRequiredMixin, ListView):
+
+    model = PlaceScrap
+    paginate_by = 10
+
+    def get_queryset(self):
+        return PlaceScrap.user_scraps(self.request.user).order_by("-id")

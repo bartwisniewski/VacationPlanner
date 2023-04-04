@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    {{event}}
+    <form method="post">{% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Start">
+    </form>
+    <p><a href="{% url 'places-list' %}"><</a></p>
+    <p><a href="{% url 'place-scrap-list' %}">old scraps</a></p>
+</div>
+{% endblock %}

@@ -14,13 +14,14 @@ My friends
                 <ul>
                     {% for friends in object_list %}
                         <li><span><a href="{% url 'friends-edit' friends.id %}">{{ friends.nickname }}</a></span>
-                            <a href="{% url 'friends-delete' friends.id %}">x</a>
-                            <a href="{% url 'friends-leave' friends.id %}">-></a>
+                            <a href="{% url 'friends-delete' friends.id %}">|DELETE|</a>
+                            <a href="{% url 'friends-leave' friends.id %}">|LEAVE|</a>
                         </li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'friends-create' %}">+</a>
-                <a href="{% url 'friends-find' %}">find more</a>
+                <hr class="navbar-divider">
+                <p><a href="{% url 'friends-create' %}">|NEW GROUP|</a></p>
+                <p><a href="{% url 'friends-find' %}">|FIND GROUP|</a></p>
                 {% if my_requests %}
                 <hr class="navbar-divider">
                 <h2>My requests:</h2>
