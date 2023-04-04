@@ -15,12 +15,16 @@ services:
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
       - DB_PORT=${POSTGRES_PORT}
+      - SCRAPPER_HOST=scrapper
+      - SCRAPPER_PORT=8002
     entrypoint: [ "/bin/sh", "-c" ]
     command:
       - |
         python3 manage.py makemigrations
         python3 manage.py migrate
         python3 manage.py runserver 0.0.0.0:${CORE_PORT}
+    volumes:
+      - ../../source/vpcoreproject/:/app/
     healthcheck:
       test: curl --fail http://0.0.0.0:${CORE_PORT}/ || exit 1
       interval: 40s
@@ -32,6 +36,7 @@ services:
         condition: service_healthy
     networks:
       - network_back
+      - network_scrapper
 
   core-db:
     image: postgres:13
@@ -68,6 +73,11 @@ services:
 networks:
   network_front:
     driver: bridge
+    name: core_network_front
   network_back:
     driver: bridge
     internal: true
+    name: core_network_back
+  network_scrapper:
+    name: scrapper_network_front
+    external: True

@@ -58,6 +58,14 @@ class UserToFriends(Member):
     def __str__(self):
         return f"{self.user.username} is in {self.friends.nickname}"
 
+    @staticmethod
+    def get_or_warning(user, friends, request):
+        try:
+            return UserToFriends.objects.get(user=user, friends=friends)
+        except ObjectDoesNotExist:
+            messages.warning(request, f"User {user} is not member of {friends} group")
+        return None
+
 
 class JoinRequest(models.Model):
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE)

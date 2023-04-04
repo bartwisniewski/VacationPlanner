@@ -13,12 +13,16 @@ My events
             {% for place in object_list %}
             <li>
                 <span><a href="{% url 'place' place.id %}">{{ place }}</a></span>
-                <span><a href="{% url 'place-edit' place.id %}">EDIT</a></span>
-                <a href="{% url 'place-delete' place.id %}">X</a>
+                <span><a href="{% url 'place-edit' place.id %}">|EDIT|</a></span>
+                <a href="{% url 'place-delete' place.id %}">|DELETE|</a>
             </li>
             {% endfor %}
         </ul>
-        <a href="{% url 'place-create' %}">+</a>
+        <hr class="navbar-divider">
+        <p><a href="{% url 'place-create' %}">|NEW PLACE|</a></p>
+        <hr class="navbar-divider">
+        <p><a href="{% url 'place-scrap' %}">|SEARCH WEB|</a></p>
+        <p><a href="{% url 'place-scrap-list' %}">|ALL SEARCHES|</a></p>
     </div>
 </div>
 

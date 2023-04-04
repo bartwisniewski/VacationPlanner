@@ -14,15 +14,15 @@
                                     by <span class="mr-1">{{proposal.user_event.user}}</span>
                                     votes: <span class="mr-1">{{proposal.placeproposalvote__count}}</span>
                                     {% if proposal.user_event.user == user %}
-                                        <a href="{% url 'place-propose-delete' proposal.id %}">Remove my proposal</a>
+                                        <a href="{% url 'place-propose-delete' proposal.id %}">|REMOVE PROPOSAL|</a>
                                     {% elif not proposal.i_voted %}
                                     <form method="post" action="{% url 'place-propose-vote' proposal.id %}" style="display: inline-block">{% csrf_token %}
                                              <div class="control">
-                                                <button type="submit">VOTE</button>
+                                                <button type="submit">|VOTE|</button>
                                              </div>
                                     </form>
                                     {% endif %}
-                                    <a href="{% url 'place-propose-accept' proposal.id %}">SELECT THIS PROPOSAL</a>
+                                    <a href="{% url 'place-propose-accept' proposal.id %}">|SELECT THIS PROPOSAL|</a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -35,7 +35,7 @@
             </div>
         {% endif %}
         <hr class="navbar-divider">
-        <a href="{% url 'event-place-propose' object.id %}">Propose new place</a>
+        <a href="{% url 'event-place-propose' object.id %}">|PROPOSE NEW PLACE|</a>
         {% if my_votes %}
         <hr class="navbar-divider">
             <p>My votes:</p>
@@ -44,7 +44,7 @@
                         <li>
                             <span class="mr-1">{{vote}}</span>
                             <form method="post" action="{% url 'place-propose-unvote' vote.id %}" style="display: inline-block">{% csrf_token %}
-                                    <button type="submit">UNVOTE</button>
+                                    <button type="submit">|UNVOTE|</button>
                             </form>
                         </li>
                     {% endfor %}

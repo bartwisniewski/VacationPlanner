@@ -17,11 +17,11 @@ Event details
                 {% endblock %}
                 {% if object.status > 0 %}
                 <p>
-                    <a href="{% url 'event-back' object.id %}">STEP BACK</a>
+                    <a href="{% url 'event-back' object.id %}">|STEP BACK|</a>
                 </p>
                 {% endif %}
                 <p>
-                    <a href="{% url 'events-list' %}"><</a>
+                    <a href="{% url 'events-list' %}">|ALL EVENTS|</a>
                 </p>
             </div>
         </div>

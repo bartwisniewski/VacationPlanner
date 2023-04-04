@@ -21,12 +21,12 @@ My events
                                 </a>
                             </span>
                             <span>
-                                <a href="{% url 'event-edit' event.id %}">EDIT</a>
+                                <a href="{% url 'event-edit' event.id %}">|EDIT|</a>
                             </span>
                         </li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'event-create' %}">+</a>
+                <a href="{% url 'event-create' %}">|NEW EVENT|</a>
                 {% if friends_events %}
                     <hr class="navbar-divider">
                     <h2>Missing events:</h2>
@@ -34,7 +34,7 @@ My events
                         {% for event in friends_events %}
                             <li>
                                 <span class="mr-1">{{event.friends}}:</span><span>{{ event.name }}</span>
-                                <span><a href="{% url 'event-join' event.id %}">JOIN</a></span>
+                                <span><a href="{% url 'event-join' event.id %}">|JOIN|</a></span>
                             </li>
                         {% endfor %}
                     </ul>
