@@ -24,11 +24,29 @@ class MyFriendsListViewTest(LoginRequiredViewTest, TestCase):
         self.user_to_friends = []
         for config in user_friends_config:
             self.user_to_friends.append(friends_generator.add_user(*config))
+        self.join_requests = [
+            friends_generator.make_join_request(self.friends[0], self.users[1]),
+            friends_generator.make_join_request(self.friends[0], self.users[2]),
+            friends_generator.make_join_request(self.friends[1], self.users[1]),
+            friends_generator.make_join_request(self.friends[1], self.users[2]),
+            friends_generator.make_join_request(self.friends[2], self.user),
+            friends_generator.make_join_request(self.friends[3], self.user),
+        ]
 
     def test_should_contain_object_list(self):
         self.client.login(username=self.user.username, password=self.user.password)
         response = self.client.get(MyFriendsListViewTest.url)
         self.assertIn("object_list", response.context.keys())
+
+    def test_should_contain_my_requests(self):
+        self.client.login(username=self.user.username, password=self.user.password)
+        response = self.client.get(MyFriendsListViewTest.url)
+        self.assertIn("my_requests", response.context.keys())
+
+    def test_should_contain_other_requests(self):
+        self.client.login(username=self.user.username, password=self.user.password)
+        response = self.client.get(MyFriendsListViewTest.url)
+        self.assertIn("other_requests", response.context.keys())
 
     def test_should_contain_all_users_friends_groups(self):
         self.client.login(username=self.user.username, password=self.user.password)
@@ -47,3 +65,19 @@ class MyFriendsListViewTest(LoginRequiredViewTest, TestCase):
         friends = response.context.get("object_list", [])
         response_friends_ids = set([f.id for f in friends])
         self.assertTrue(response_friends_ids.isdisjoint(other_friends_ids))
+
+    def test_should_contain_all_my_join_requests(self):
+        self.client.login(username=self.user.username, password=self.user.password)
+        response = self.client.get(MyFriendsListViewTest.url)
+        expected = {self.join_requests[4].id, self.join_requests[5].id}
+        response_requests = response.context.get("my_requests", [])
+        response_requests_ids = set([rr.id for rr in response_requests])
+        self.assertEqual(response_requests_ids, expected)
+
+    def test_should_contain_all_other_requests_where_user_is_admin(self):
+        self.client.login(username=self.user.username, password=self.user.password)
+        response = self.client.get(MyFriendsListViewTest.url)
+        expected = {self.join_requests[0].id, self.join_requests[1].id}
+        response_requests = response.context.get("other_requests", [])
+        response_requests_ids = set([rr.id for rr in response_requests])
+        self.assertEqual(response_requests_ids, expected)
