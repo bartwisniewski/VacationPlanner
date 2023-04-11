@@ -1,9 +1,7 @@
 from django.test import TestCase, Client
-from http import HTTPStatus
 from django.urls import reverse
 
-from users.tests.views.tests import LoginRequiredViewTest
-
+from users.tests.mixins import LoginRequiredViewTest
 from friends.tests.data import Generator
 
 client = Client()
