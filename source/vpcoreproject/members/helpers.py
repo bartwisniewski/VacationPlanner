@@ -16,6 +16,8 @@ class SingleObjectUserRoleRequiredView(LoginRequiredMixin, UserPassesTestMixin):
         return self.object.test_user_role(self.request.user, self.permission_role)
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(self.get_success_url())
 

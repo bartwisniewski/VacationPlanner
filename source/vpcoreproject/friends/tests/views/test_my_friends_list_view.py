@@ -4,8 +4,6 @@ from django.urls import reverse
 from users.tests.mixins import LoginRequiredViewTest
 from friends.tests.data import Generator
 
-client = Client()
-
 
 class MyFriendsListViewTest(LoginRequiredViewTest, TestCase):
     url = reverse("friends-list")
@@ -13,8 +11,9 @@ class MyFriendsListViewTest(LoginRequiredViewTest, TestCase):
     def setUp(self):
         super().setUp()
         self.user = self.users[0]
+        friends_data = [("friends1",), ("friends2",), ("friends3",), ("friends4",)]
         friends_generator = Generator()
-        self.friends = friends_generator.generate_friends()
+        self.friends = friends_generator.generate_friends(friends_data)
         user_friends_config = [
             (self.friends[0], self.user, True, True),
             (self.friends[1], self.user, False, False),
