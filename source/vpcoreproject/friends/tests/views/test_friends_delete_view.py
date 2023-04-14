@@ -1,12 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 from users.tests.mixins import SingleObjectUserRoleRequiredViewTest
 from friends.tests.data import Generator
 from friends.models import Friends, UserToFriends
 
 
-class FriendsUpdateViewTest(SingleObjectUserRoleRequiredViewTest, TestCase):
+class FriendsDeleteViewTest(SingleObjectUserRoleRequiredViewTest, TestCase):
     redirect_url = reverse("friends-list")
 
     def setUp(self):
@@ -18,14 +19,16 @@ class FriendsUpdateViewTest(SingleObjectUserRoleRequiredViewTest, TestCase):
         self.friends = friends_generator.generate_friends(friends_data)
         self.tested_friends = self.friends[0]
         self.user_to_friends = [
-            friends_generator.add_user(self.tested_friends, self.user, True, True),
             friends_generator.add_user(
-                self.tested_friends, self.users[1], False, False
+                friends=self.tested_friends, user=self.user, admin=True, owner=True
+            ),
+            friends_generator.add_user(
+                friends=self.tested_friends, user=self.users[1], admin=True, owner=False
             ),
         ]
         self.allowed_user = self.user
         self.disallowed_user = self.users[1]
-        self.url = reverse("friends-edit", kwargs={"pk": self.tested_friends.id})
+        self.url = reverse("friends-delete", kwargs={"pk": self.tested_friends.id})
 
     def test_should_return_form_on_get(self):
         self.client.login(username=self.user.username, password=self.user.password)
@@ -38,24 +41,9 @@ class FriendsUpdateViewTest(SingleObjectUserRoleRequiredViewTest, TestCase):
         object = response.context.get("object")
         self.assertEqual(object.id, self.tested_friends.id)
 
-    def test_should_update_friends_on_post(self):
+    def test_should_delete_friends_on_post(self):
         self.client.login(username=self.user.username, password=self.user.password)
-        friends_data = {"nickname": "updated_friends1"}
-        self.client.post(self.url, friends_data)
-        self.assertEqual(
-            Friends.objects.get(id=self.tested_friends.id).nickname,
-            friends_data.get("nickname"),
+        self.client.post(self.url)
+        self.assertRaises(
+            ObjectDoesNotExist, Friends.objects.get, id=self.tested_friends.id
         )
-
-    def test_should_update_role_on_post(self):
-        self.client.login(username=self.user.username, password=self.user.password)
-        tested_member = self.user_to_friends[1]
-        members_data = {
-            "form-TOTAL_FORMS": 1,
-            "form-0-id": tested_member.id,
-            "form-0-username": tested_member.user.username,
-            "form-0-admin": "on",
-            "form-0-owner": False,
-        }
-        self.client.post(self.url, members_data)
-        self.assertEqual(UserToFriends.objects.get(id=tested_member.id).admin, True)
