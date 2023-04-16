@@ -68,7 +68,6 @@ class FriendsUpdateView(SingleObjectUserRoleRequiredView, UpdateView):
     def update_members(self, request, *args, **kwargs):
         count = int(request.POST.get("form-TOTAL_FORMS", 0))
         post_data = request.POST
-        print(post_data)
         UserToFriendsUpdateManager.update_members(count, post_data)
 
     def post(self, request, *args, **kwargs):

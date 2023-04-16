@@ -47,3 +47,9 @@ class FriendsDeleteViewTest(SingleObjectUserRoleRequiredViewTest, TestCase):
         self.assertRaises(
             ObjectDoesNotExist, Friends.objects.get, id=self.tested_friends.id
         )
+
+    def test_should_delete_all_user_friends_relations_on_post(self):
+        self.client.login(username=self.user.username, password=self.user.password)
+        self.client.post(self.url)
+        queryset = UserToFriends.objects.filter(friends=self.tested_friends.id)
+        self.assertFalse(queryset.exists())

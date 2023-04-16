@@ -1,6 +1,7 @@
 import setuptools
 
 test_deps = [
+    "daphne==4.0.0",
     "pytest==7.2.0",
     "mock==4.0.3",
     "parse==1.19.0",
@@ -12,6 +13,8 @@ test_deps = [
     "watchdog==2.1.9",
     "parameterized==0.8.1",
     "Django==4.1.3",
+    "django-storages==1.13.2",
+    "djangorestframework==3.14.0",
 ]
 
 libs = {"test": test_deps}
