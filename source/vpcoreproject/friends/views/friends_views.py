@@ -19,7 +19,9 @@ class MyFriendsListView(LoginRequiredMixin, ListView, ChatMixin):
     paginate_by = 10
 
     def get_queryset(self):
-        return Friends.objects.filter(usertofriends__user=self.request.user)
+        return Friends.objects.filter(usertofriends__user=self.request.user).order_by(
+            "nickname"
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,6 +73,7 @@ class FriendsUpdateView(SingleObjectUserRoleRequiredView, UpdateView):
         UserToFriendsUpdateManager.update_members(count, post_data)
 
     def post(self, request, *args, **kwargs):
+
         self.update_members(request, *args, **kwargs)
         return super().post(request, *args, **kwargs)
 
@@ -102,6 +105,8 @@ class UserToFriendsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteVie
         )
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(self.get_success_url())
 
@@ -142,6 +147,8 @@ class FriendsLeaveView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
     def test_func(self):
         self.object = self.get_object(self.request)
+        if not self.object:
+            return False
         friends_group = self.object.friends
         user_is_owner = friends_group.test_user_role(self.request.user, "owner")
         other_owners = friends_group.usertofriends_set.filter(owner=True).exclude(
@@ -150,5 +157,7 @@ class FriendsLeaveView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         return not user_is_owner or other_owners.count()
 
     def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
         messages.warning(self.request, self.permission_denied_message)
         return HttpResponseRedirect(self.success_url)
