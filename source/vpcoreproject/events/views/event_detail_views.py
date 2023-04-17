@@ -7,14 +7,12 @@ from django.db.models import Count, Case, Value, BooleanField, When
 
 from events.models import (
     Event,
-    UserToEvent,
     DateProposal,
     DateProposalVote,
     PlaceProposal,
     PlaceProposalVote,
 )
 
-from chat.models import EventChat, Message
 from chat.views import ChatMixin
 
 
@@ -22,7 +20,7 @@ class EventDetailView(UserPassesTestMixin, DetailView, ChatMixin):
     model = Event
     template_suffix_from_status = ["_detail_0", "_detail_1", "_detail_2", "_detail_3"]
     success_url = reverse_lazy("events-list")
-    permission_denied_message = f"you are not participant of this event"
+    permission_denied_message = "you are not participant of this event"
 
     def get_event(self, request):
         event_id = self.kwargs["pk"]

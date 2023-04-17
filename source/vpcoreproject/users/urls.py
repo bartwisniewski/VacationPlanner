@@ -1,6 +1,5 @@
 from django.urls import path
 from django.urls import include
-from django.contrib.auth.urls import urlpatterns
 from users import views
 
 urlpatterns = [
