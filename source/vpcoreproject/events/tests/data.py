@@ -1,5 +1,5 @@
 from users.tests.data import users
-from friends.tests.data import friends, user_to_friends
+from friends.tests.data import friends
 from events.models import Event, UserToEvent
 
 

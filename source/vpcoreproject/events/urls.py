@@ -1,7 +1,4 @@
 from django.urls import path
-from django.urls import include
-from django.contrib.auth.urls import urlpatterns
-from events import views
 from events.views import (
     event_list_views,
     event_detail_views,

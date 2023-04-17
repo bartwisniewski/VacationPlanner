@@ -1,14 +1,10 @@
 from django.contrib.auth import login, get_user_model
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.shortcuts import render
-from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView, View
 
 from django.http import HttpResponseRedirect
-from django.utils.decorators import method_decorator
-from django.core.exceptions import ObjectDoesNotExist
 
 from users.forms import MyUserCreationForm, MyUserUpdateForm, FamilySizeForm
 from users.helpers import get_modelform_data_from_post
@@ -22,7 +18,6 @@ class DashboardView(TemplateView, ChatMixin):
     template_name = "users/dashboard.html"
 
     def get(self, request, *args, **kwargs):
-
         context = self.get_context_data(**kwargs)
         if request.user.is_authenticated:
             context["joined"] = request.user.date_joined.strftime("%m/%d/%Y")
