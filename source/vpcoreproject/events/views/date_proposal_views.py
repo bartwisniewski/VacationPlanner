@@ -13,7 +13,7 @@ from events.forms import DateProposalForm
 class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = DateProposal
     form_class = DateProposalForm
-    permission_denied_message = f"you are not participant of this event"
+    permission_denied_message = "you are not participant of this event"
 
     def get_success_url(self):
         event = self.get_event(self.request)
@@ -67,7 +67,7 @@ class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
 class DateProposalDeleteView(UserPassesTestMixin, DeleteView):
     model = DateProposal
     template_name = "events/proposal_confirm_delete.html"
-    permission_denied_message = f"you can only delete your own proposal"
+    permission_denied_message = "you can only delete your own proposal"
 
     def get_success_url(self):
         event = self.get_object().user_event.event
@@ -163,7 +163,7 @@ class ProposalUnvoteView(LoginRequiredMixin, View):
             return HttpResponseRedirect(target_url)
 
         if not self.test_func(request):
-            messages.warning(request, f"You can only unvote your own votes")
+            messages.warning(request, "You can only unvote your own votes")
             return HttpResponseRedirect(target_url)
 
         proposal_string = str(self.object)

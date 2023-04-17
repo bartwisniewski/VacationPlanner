@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from places.scrapper.schemas import Query, Place
+from places.scrapper.schemas import Query
 
 
 class QuerySerializer(serializers.Serializer):

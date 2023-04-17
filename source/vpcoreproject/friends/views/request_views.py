@@ -66,10 +66,10 @@ class CreateJoinRequestView(TemplateView):
                 user=user, friends=friends
             )
             if created:
-                messages.info(self.request, f"Join request created")
+                messages.info(self.request, "Join request created")
             else:
                 messages.warning(
-                    self.request, f"You have already sent a request to join this group"
+                    self.request, "You have already sent a request to join this group"
                 )
         return HttpResponseRedirect(self.success_url)
 
@@ -83,7 +83,7 @@ class AnswerJoinRequestView(TemplateView):
         try:
             return JoinRequest.objects.get(id=request_id)
         except ObjectDoesNotExist:
-            messages.warning(self.request, f"Join request does not exist")
+            messages.warning(self.request, "Join request does not exist")
         return None
 
     def get(self, request, *args, **kwargs):
@@ -106,9 +106,9 @@ class AnswerJoinRequestView(TemplateView):
                 UserToFriends(
                     user=join_request.user, friends=join_request.friends
                 ).save()
-                messages.info(self.request, f"Join request accepted")
+                messages.info(self.request, "Join request accepted")
             else:
-                messages.info(self.request, f"Join request rejected")
+                messages.info(self.request, "Join request rejected")
             join_request.delete()
 
         return HttpResponseRedirect(self.success_url)
