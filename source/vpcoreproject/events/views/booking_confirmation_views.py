@@ -10,7 +10,7 @@ from events.models import Event
 class EventConfrimBookingView(UserPassesTestMixin, TemplateView):
     model = Event
     template_name = "events/booking_confirm.html"
-    permission_denied_message = f"you are not promoter of this event"
+    permission_denied_message = "you are not promoter of this event"
 
     def get_object(self):
         object_id = self.kwargs["pk"]

@@ -9,7 +9,7 @@ from django.db import models
 class SingleObjectUserRoleRequiredView(LoginRequiredMixin, UserPassesTestMixin):
     success_url = None
     permission_role = None
-    permission_denied_message = f"you are not allowed"
+    permission_denied_message = "you are not allowed"
 
     def test_func(self):
         self.object = self.get_object()

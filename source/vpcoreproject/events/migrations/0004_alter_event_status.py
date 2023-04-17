@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("events", "0003_remove_dateproposal_event_remove_dateproposal_user_and_more"),
     ]

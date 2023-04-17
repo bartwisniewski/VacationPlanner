@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
@@ -19,7 +19,6 @@ from events.models import Event, UserToEvent, PlaceProposal
 
 
 class MyPlacesListView(LoginRequiredMixin, ListView):
-
     model = Place
     paginate_by = 10
 
@@ -92,7 +91,7 @@ class PlaceDeleteView(UserPassesTestMixin, DeleteView):
     model = Place
     success_url = reverse_lazy("places-list")
     permission_role = "admin"
-    permission_denied_message = f"you are not owner of this place"
+    permission_denied_message = "you are not owner of this place"
 
     def test_func(self):
         place = self.get_object()
@@ -108,7 +107,7 @@ class PlaceUpdateView(UserPassesTestMixin, UpdateView):
     form_class = PlaceForm
     template_name_suffix = "_form"
     success_url = reverse_lazy("places-list")
-    permission_denied_message = f"you have not created this place"
+    permission_denied_message = "you have not created this place"
 
     def test_func(self):
         self.object = self.get_object()
@@ -154,7 +153,7 @@ class PlaceScrapResultView(UserPassesTestMixin, TemplateView):
     model = PlaceScrap
     template_name = "places/place_scrap_result.html"
     reject_url = reverse_lazy("place-srap-list")
-    permission_denied_message = f"you have not ordered this scrap"
+    permission_denied_message = "you have not ordered this scrap"
 
     def get_object(self):
         task_id = self.kwargs.get("task_id", None)
@@ -184,7 +183,6 @@ class PlaceScrapResultView(UserPassesTestMixin, TemplateView):
 
 
 class MyPlaceScrapListView(LoginRequiredMixin, ListView):
-
     model = PlaceScrap
     paginate_by = 10
 

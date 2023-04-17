@@ -41,7 +41,7 @@ class EventUpdateView(SingleObjectUserRoleRequiredView, UpdateView):
     template_name_suffix = "_update_form"
     success_url = reverse_lazy("events-list")
     permission_role = "admin"
-    permission_denied_message = f"you are not admin of this event"
+    permission_denied_message = "you are not admin of this event"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,7 +77,7 @@ class EventDeleteView(SingleObjectUserRoleRequiredView, DeleteView):
 
 class UserToEventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = UserToEvent
-    permission_denied_message = f"you are not permited to delete this member"
+    permission_denied_message = "you are not permited to delete this member"
     success_url = reverse_lazy("events-list")
 
     def test_func(self):
