@@ -9,6 +9,8 @@ class UserGenerator:
         ("test_user2", "test2@gmail.com", "temporary"),
         ("test_user3", "test3@gmail.com", "temporary"),
         ("test_user4", "test4@gmail.com", "temporary"),
+        ("test_user5", "test5@gmail.com", "temporary"),
+        ("test_user6", "test6@gmail.com", "temporary"),
     ]
 
     def __init__(self):
