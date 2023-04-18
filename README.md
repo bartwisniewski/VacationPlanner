@@ -84,7 +84,9 @@ For learning purposes core part of a project has been deployed on AWS EB with us
 
 ## CI/CD
 - pre-commit-hooks
+https://github.com/bartwisniewski/VacationPlanner/blob/main/.pre-commit-config.yaml
 - github actions
+https://github.com/bartwisniewski/VacationPlanner/blob/main/.github/workflows/django.yml
 
 -------------------------------------------------------------------
 ## Web scrapper:
