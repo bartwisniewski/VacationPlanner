@@ -1,18 +1,37 @@
 # Vacation Planner
 
-* [General info](#general-info)
+* [Description](#description)
 * [Tech-stack](#tech-stack)
 * [Architecture](#architecture)
 * [Diagrams](#diagrams)
-* [Description](#description)
 * [How to run](#how-to-run)
 * [Testing](#testing)
 * [Deployment](#deployment)
 * [CI CD](#ci-cd)
 * [Web scrapper](#web-scrapper)
 
-## General info
-<b>Vacation planner</b>. Web application to plan group vacation, select date, place, vote on them and choose the best option for everyone. Additional tool to search web for suiting accommodation options. Integrated chat to communicate between group members or event participants
+## Description
+<details><summary><b>General info</b></summary>Web application to plan group vacation, select date, place, vote on them and choose the best option for everyone. Additional tool to search web for suiting accommodation options. Integrated chat to communicate between group members or event participants</details>
+<details><summary><b>Application purpose</b></summary>
+Application will be used to arrange vacations for a group of friends. The main problem is selecting matching date and place to go. Application will allow users to group together, create events, propose dates and places and vote on them to select the best possible option.</details>
+<details><summary><b>Application flow</b></summary>
+- Register and login
+- Configure your family (adults, children, infants)
+- Create or join a group
+- Create event for a group and automatically add all group members to it
+- Creator of an event becomes its owner and can grant owner or admin status to any other member
+- At each step members of a group can leave the event
+- Each group member can propose and vote on a date (start and end of the event). After voting each member of a group must confirm finishing this step.
+- Date is approved by a event owner or admin
+- User can add vacation places to its own profile to propose it in event. It should contain link, capacity, description and other necessary information
+- User can start web scrapping task to retrieve list of suitable places
+- Users can propose and vote on a place to go
+- Place is approved by a event owner / admin
+- User that proposed selected place gets an email and internal notification to book this place
+- User that proposed selected place mark it as booked or retrieve the proposal to go back to place selection. He can also give information about advance payment 
+- Event is marked as booked
+- All the time users can communicate through chat within friends group or event
+</details>
 
 ## Tech-stack
 <ul>
@@ -55,10 +74,8 @@ Commands:
 | Components - core  | Components - scrapper |
 |<img src="https://user-images.githubusercontent.com/29715549/232714034-2b2d9003-0a35-4098-b768-e033a77ced60.png" width="100%" height="100%">|<img src="https://user-images.githubusercontent.com/29715549/232714101-01695b24-ab07-4cb8-8467-507848e685c1.png" width="100%" height="100%">|
 
-### Data
-
-## Description
-Vacation planner. Web application to plan group vacation, select date, place, vote on them and choose the best option for everyone. Additional tool to search web for suiting accommodation options. Integrated chat to communicate between group members or event participants
+### Database
+<img src="https://user-images.githubusercontent.com/29715549/232879614-dc41dcd4-47a2-4bc5-899d-330e73515aec.png" width="100%" height="100%">
 
 ## How to run
 Project is prepared to run locally in docker:
