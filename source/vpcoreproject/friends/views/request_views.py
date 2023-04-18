@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import TemplateView
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.list import ListView
 
 from friends.models import Friends, UserToFriends, JoinRequest
@@ -44,7 +44,7 @@ class FriendsFindView(LoginRequiredMixin, ListView):
         return HttpResponseRedirect(my_url)
 
 
-class CreateJoinRequestView(TemplateView):
+class CreateJoinRequestView(LoginRequiredMixin, TemplateView):
     success_url = reverse_lazy("friends-list")
     template_name = "friends/request_confirm.html"
 
@@ -74,9 +74,24 @@ class CreateJoinRequestView(TemplateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class AnswerJoinRequestView(TemplateView):
+class AnswerJoinRequestView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     success_url = reverse_lazy("friends-list")
     template_name = "friends/confirm.html"
+    model = UserToFriends
+    permission_denied_message = "you are not permited to answer this request"
+
+    def test_func(self):
+        self.object = self.get_object()
+        if not self.object:
+            return False
+
+        return self.object.friends.test_user_role(self.request.user, "admin")
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()
+        messages.warning(self.request, self.permission_denied_message)
+        return HttpResponseRedirect(self.success_url)
 
     def get_object(self):
         request_id = self.kwargs["pk"]
@@ -102,7 +117,7 @@ class AnswerJoinRequestView(TemplateView):
         join_request = self.get_object()
         if join_request:
             accept = self.request.GET.get("accept", False)
-            if accept:
+            if accept == "True":
                 UserToFriends(
                     user=join_request.user, friends=join_request.friends
                 ).save()
