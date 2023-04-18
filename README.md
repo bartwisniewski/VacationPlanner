@@ -1,4 +1,4 @@
-# VacationPlanner
+# Vacation Planner
 
 * [General info](#general-info)
 * [Tech-stack](#tech-stack)
