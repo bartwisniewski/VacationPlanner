@@ -23,7 +23,10 @@
 <li>RabbitMQ</li>
 <li>Javascript</li>
 <li>Postgresql</li>
+<li>Selenium</li>
 <li>Redis</li>
+<li>Docker</li>
+<li>AWS</li>
 </ul>
 
 ## Architecture
