@@ -4,6 +4,12 @@
 * [Tech-stack](#tech-stack)
 * [Architecture](#architecture)
 * [Diagrams](#diagrams)
+* [Description](#description)
+* [How to run](#how-to-run)
+* [Testing](#testing)
+* [Deployment](#deployment)
+* [CI CD](#ci-cd)
+* [Web scrapper](#web-scrapper)
 
 ## General info
 <b>Vacation planner</b>. Web application to plan group vacation, select date, place, vote on them and choose the best option for everyone. Additional tool to search web for suiting accommodation options. Integrated chat to communicate between group members or event participants
@@ -82,13 +88,12 @@ cd to the project and run:
 ## Deployment
 For learning purposes core part of a project has been deployed on AWS EB with use of EB CLI
 
-## CI/CD
+## CI CD
 - pre-commit-hooks
 https://github.com/bartwisniewski/VacationPlanner/blob/main/.pre-commit-config.yaml
 - github actions
 https://github.com/bartwisniewski/VacationPlanner/blob/main/.github/workflows/django.yml
 
--------------------------------------------------------------------
-## Web scrapper:
+## Web scrapper
 Seperate microservice for web scrapping, source available here:
 https://github.com/bartwisniewski/vpscrap
