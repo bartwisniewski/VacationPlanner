@@ -72,7 +72,9 @@ open in a browser:
 As this is a portfolio project, not a real production application project is not fully covered with testing. To show possiblities I have prepared tests for 1 django app: "Friends"
 
 Locally tests can be run with use of tox
-pip install tox
+
+```pip install tox```
+
 cd to the project and run:
 
 ```tox -e core```
