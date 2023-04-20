@@ -1,12 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 
-from events.models import Event, UserToEvent
+from events.models import Event
 from chat.views import ChatMixin
 
 
 class MyEventsListView(LoginRequiredMixin, ListView, ChatMixin):
-
     model = Event
     paginate_by = 10
 

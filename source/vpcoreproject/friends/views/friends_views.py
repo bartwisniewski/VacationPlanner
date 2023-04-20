@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -14,7 +13,6 @@ from chat.views import ChatMixin
 
 
 class MyFriendsListView(LoginRequiredMixin, ListView, ChatMixin):
-
     model = Friends
     paginate_by = 10
 
@@ -73,7 +71,6 @@ class FriendsUpdateView(SingleObjectUserRoleRequiredView, UpdateView):
         UserToFriendsUpdateManager.update_members(count, post_data)
 
     def post(self, request, *args, **kwargs):
-
         self.update_members(request, *args, **kwargs)
         return super().post(request, *args, **kwargs)
 
@@ -89,7 +86,7 @@ class FriendsDeleteView(SingleObjectUserRoleRequiredView, DeleteView):
 
 class UserToFriendsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = UserToFriends
-    permission_denied_message = f"you are not permited to delete this member"
+    permission_denied_message = "you are not permited to delete this member"
     success_url = reverse_lazy("friends-list")
 
     def test_func(self):
@@ -114,7 +111,7 @@ class UserToFriendsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteVie
 class FriendsLeaveView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     success_url = reverse_lazy("friends-list")
     permission_denied_message = (
-        f"you cannot leave your own group if there is no other owner"
+        "you cannot leave your own group if there is no other owner"
     )
     template_name = "friends/confirm.html"
 
@@ -142,7 +139,7 @@ class FriendsLeaveView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         user_to_friends = self.get_object(request, *args, **kwargs)
         if user_to_friends:
             user_to_friends.delete()
-            messages.info(self.request, f"You have left the group")
+            messages.info(self.request, "You have left the group")
         return HttpResponseRedirect(self.success_url)
 
     def test_func(self):

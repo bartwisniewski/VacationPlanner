@@ -5,7 +5,7 @@ from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 
-from friends.models import Friends, UserToFriends
+from friends.models import Friends
 from places.models import Place
 from events.forms_for_models import UserEventsRoleForm
 from members.models import Member

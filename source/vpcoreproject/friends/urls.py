@@ -1,6 +1,4 @@
 from django.urls import path
-from django.urls import include
-from django.contrib.auth.urls import urlpatterns
 from friends.views import friends_views, request_views
 
 urlpatterns = [

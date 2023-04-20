@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import View, TemplateView
+from django.views.generic import View
 from django.views.generic.edit import CreateView, DeleteView
 
 from events.models import PlaceProposal, PlaceProposalVote, Event, UserToEvent
@@ -17,13 +17,12 @@ from events.views.date_proposal_views import (
     ProposalUnvoteView,
     ProposalAcceptView,
 )
-from events.helpers import compile_filter
 
 
 class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = PlaceProposal
     form_class = PlaceProposalForm
-    permission_denied_message = f"you are not participant of this event"
+    permission_denied_message = "you are not participant of this event"
     phrase_min_length = 3
 
     def get_success_url(self):
@@ -103,7 +102,7 @@ class PlaceProposalCreateViewAddFilter(View):
 class PlaceProposalDeleteView(UserPassesTestMixin, DeleteView):
     model = PlaceProposal
     template_name = "events/proposal_confirm_delete.html"
-    permission_denied_message = f"you can only delete your own proposal"
+    permission_denied_message = "you can only delete your own proposal"
 
     def get_success_url(self):
         event = self.get_object().user_event.event
@@ -137,7 +136,8 @@ class PlaceProposalAcceptView(ProposalAcceptView):
         send_mail(
             "Your proposal was selected",
             "Congratulations, your place proposal has been chosen by the group. "
-            "Now you need to process with booking and confirm it in the vacation planner",
+            "Now you need to process with booking and "
+            "confirm it in the vacation planner",
             settings.EMAIL_HOST_USER,
             [promoter.email],
             fail_silently=True,

@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from users.tests.mixins import LoginRequiredViewTest
 from friends.tests.data import Generator
-from friends.models import Friends, UserToFriends
+from friends.models import UserToFriends
 
 
 class FriendsLeaveViewTest(LoginRequiredViewTest, TestCase):

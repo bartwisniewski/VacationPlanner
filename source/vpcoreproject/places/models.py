@@ -27,7 +27,10 @@ class PlaceSize(models.Model):
     kitchens = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"bd:{self.bedrooms}-bt:{self.bathrooms}-lv:{self.living_rooms}-kt:{self.kitchens}"
+        return (
+            f"bd:{self.bedrooms}-bt:{self.bathrooms}-lv:{self.living_rooms}"
+            f"-kt:{self.kitchens}"
+        )
 
 
 class Place(models.Model):
