@@ -51,7 +51,7 @@ services:
       timeout: 3s
       retries: 3
     volumes:
-      - ./core-db/:/var/lib/postgresql/data/
+      - core-postgres-vol:/var/lib/postgresql/data/:Z
     networks:
       - network_back
 
@@ -81,3 +81,6 @@ networks:
   network_scrapper:
     name: scrapper_network_front
     external: True
+
+volumes:
+  core-postgres-vol:
