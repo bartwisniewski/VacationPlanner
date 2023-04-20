@@ -81,15 +81,27 @@ Commands:
 Project is prepared to run locally in docker:
 download both services:
 
+```cd <base directory>```
+
 ```git clone https://github.com/bartwisniewski/VacationPlanner```
 
 ```git clone https://github.com/bartwisniewski/vpscrap```
+
+copy .env_default files to .env
+
+```cd <base directory>/vpscrap/deployment/dev```
+
+```cp .env_default .env```
+
+```cd <base directory>/VacationPlanner/deployment/dev```
+
+```cp .env_default .env```
 
 run docker compose for both repositories:
 
 ```docker-compose -f <base directory>/vpscrap/deployment/dev/docker-compose.yml up --build -d```
 
-```docker-compose -f <base directory>/vpcore/deployment/dev/docker-compose.yml up --build -d```
+```docker-compose -f <base directory>/VacationPlanner/deployment/dev/docker-compose.yml up --build -d```
 
 open in a browser:
 127.0.0.1:8001
