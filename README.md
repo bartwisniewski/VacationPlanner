@@ -115,7 +115,7 @@ Locally tests can be run with use of tox
 
 cd to the project and run:
 
-```tox -e core```
+```tox -e test_core```
 
 ## Deployment
 For learning purposes core part of a project has been deployed on AWS EB with use of EB CLI
