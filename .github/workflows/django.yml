@@ -34,4 +34,4 @@ jobs:
         DB_HOST: 127.0.0.1
         DB_PORT: 0
       run: |
-        python source/vpcoreproject/manage.py test users.tests.views
+        python source/vpcoreproject/manage.py test

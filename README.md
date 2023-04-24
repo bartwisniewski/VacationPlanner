@@ -28,7 +28,7 @@ Application will be used to arrange vacations for a group of friends. The main p
 - Users can propose and vote on a place to go
 - Place is approved by a event owner / admin
 - User that proposed selected place gets an email and internal notification to book this place
-- User that proposed selected place mark it as booked or retrieve the proposal to go back to place selection. He can also give information about advance payment 
+- User that proposed selected place mark it as booked or retrieve the proposal to go back to place selection. He can also give information about advance payment
 - Event is marked as booked
 - All the time users can communicate through chat within friends group or event
 </details>
@@ -104,7 +104,7 @@ run docker compose for both repositories:
 ```docker-compose -f <base directory>/VacationPlanner/deployment/dev/docker-compose.yml up --build -d```
 
 open in a browser:
-127.0.0.1:8001
+http://127.0.0.1:8001
 
 ## Testing
 As this is a portfolio project, not a real production application project is not fully covered with testing. To show possiblities I have prepared tests for 1 django app: "Friends"
@@ -119,12 +119,27 @@ cd to the project and run:
 
 ## Deployment
 For learning purposes core part of a project has been deployed on AWS EB with use of EB CLI
+Following services were used:
+<ul>
+  <li>AWS Elastic Beanstalk - Configuration and deployment of the web application</li>
+  <li>AWS EC2 - Virtual server with django app and nginx web server</li>
+  <li>AWS RDS - Database - Postgresql</li>
+  <li>AWS S3 - Network storage for application statics: JS, Images </li>
+</ul>
 
 ## CI CD
 - pre-commit-hooks
 https://github.com/bartwisniewski/VacationPlanner/blob/main/.pre-commit-config.yaml
-- github actions
+  <ul>
+    <li>black - code formatting</li>
+    <li>ruff - static code analysis</li>
+    <li>trailing-whitespace</li>
+    <li>end-of-file-fixed</li>
+    <li>check-yaml</li>
+    <li>check-added-large-files</li>
+  </ul>
 https://github.com/bartwisniewski/VacationPlanner/blob/main/.github/workflows/django.yml
+CI GitHub action configured for merging with main branch. GitHub run tests on python 3.8, 3.9 and 3.10 environments.
 
 ## Web scrapper
 Seperate microservice for web scrapping, source available here:
