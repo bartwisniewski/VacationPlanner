@@ -26,12 +26,7 @@ SECRET_KEY = "django-insecure-@-+!s62%kt45folq+n7ve$01o6f=xno%=6e+&+#_d5#!%i3c3i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "vpcore-prod.eu-central-1.elasticbeanstalk.com",
-    "172.31.11.202",
-    "0.0.0.0",
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = ["*"]
 
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8001"]
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

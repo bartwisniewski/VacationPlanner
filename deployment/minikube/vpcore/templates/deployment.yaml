@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vpcore.fullname" . }}
+  labels:
+    {{- include "vpcore.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "vpcore.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "vpcore.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "vpcore.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: "DJANGO_SETTINGS_MODULE"
+              value: vpcoreproject.settings
+            - name: "ALLOWED_HOSTS"
+              value: '*'
+            - name: "CORE_HOST_NAME"
+              value: {{ .Release.Name }}
+            - name: "CORE_PORT"
+              value: "{{ .Values.service.targetPort }}"
+            - name: "DB_ENGINE"
+              value: django.db.backends.postgresql_psycopg2
+            - name: "DB_HOST"
+              value: "{{ .Release.Name }}-postgres"
+            - name: "DB_DB"
+              value: {{ .Values.postgres.dbname }}
+            - name: "DB_USER"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cfgmap2
+                  key:  postgres-user
+            - name: "DB_PASSWORD"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-cfgmap2
+                  key:  postgres-password
+            - name: "DB_PORT"
+              value: {{ .Values.postgres.port }}
+            - name: "SCRAPPER_HOST"
+              value: scrapper
+            - name: "SCRAPPER_PORT"
+              value: "8002"
+          command: [ "/bin/sh" ]
+          args: [ "-c", "python3 manage.py makemigrations;
+          python3 manage.py migrate;
+          python3 manage.py runserver 0.0.0.0:{{ .Values.service.targetPort }}" ]
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
