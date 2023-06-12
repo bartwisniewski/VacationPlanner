@@ -109,6 +109,7 @@ open in a browser:
 http://127.0.0.1:8001
 
 For the core part of the project I have also prepared helm charts and tested deployment on Kubernetes (Minikube running locally on Docker)
+Chart available here: https://github.com/bartwisniewski/VacationPlanner/tree/main/deployment/minikube/vpcore
 
 ## Testing
 As this is a portfolio project, not a real production application project is not fully covered with testing. To show possiblities I have prepared tests for 1 django app: "Friends"
