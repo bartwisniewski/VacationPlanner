@@ -5,6 +5,7 @@
 * [Architecture](#architecture)
 * [Diagrams](#diagrams)
 * [How to run](#how-to-run)
+* [Kubernetes](#kubernetes)
 * [Testing](#testing)
 * [Deployment](#deployment)
 * [CI CD](#ci-cd)
@@ -108,6 +109,7 @@ run docker compose for both repositories:
 open in a browser:
 http://127.0.0.1:8001
 
+## Kubernetes
 For the core part of the project I have also prepared helm charts and tested deployment on Kubernetes (Minikube running locally on Docker)
 Chart available here: https://github.com/bartwisniewski/VacationPlanner/tree/main/deployment/minikube/vpcore
 
