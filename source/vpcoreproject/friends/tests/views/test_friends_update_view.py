@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-
-from users.tests.mixins import SingleObjectUserRoleRequiredViewTest
-from friends.tests.data import Generator
 from friends.models import Friends, UserToFriends
+from friends.tests.data import Generator
+from users.tests.mixins import SingleObjectUserRoleRequiredViewTest
 
 
 class FriendsUpdateViewTest(SingleObjectUserRoleRequiredViewTest, TestCase):

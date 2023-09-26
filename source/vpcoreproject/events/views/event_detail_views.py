@@ -1,19 +1,17 @@
-from django.views.generic.detail import DetailView
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.urls import reverse_lazy
+from chat.views import ChatMixin
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import BooleanField, Case, Count, Value, When
 from django.http import HttpResponseRedirect
-from django.db.models import Count, Case, Value, BooleanField, When
-
+from django.urls import reverse_lazy
+from django.views.generic.detail import DetailView
 from events.models import (
-    Event,
     DateProposal,
     DateProposalVote,
+    Event,
     PlaceProposal,
     PlaceProposalVote,
 )
-
-from chat.views import ChatMixin
 
 
 class EventDetailView(UserPassesTestMixin, DetailView, ChatMixin):

@@ -1,22 +1,21 @@
 import re
 
-from django.core.mail import send_mail
 from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import View
 from django.views.generic.edit import CreateView, DeleteView
-
-from events.models import PlaceProposal, PlaceProposalVote, Event, UserToEvent
 from events.forms import PlaceProposalForm
-from places.models import Place
+from events.models import Event, PlaceProposal, PlaceProposalVote, UserToEvent
 from events.views.date_proposal_views import (
-    ProposalVoteView,
-    ProposalUnvoteView,
     ProposalAcceptView,
+    ProposalUnvoteView,
+    ProposalVoteView,
 )
+from places.models import Place
 
 
 class PlaceProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

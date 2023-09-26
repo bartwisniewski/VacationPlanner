@@ -1,5 +1,6 @@
-from friends.models import Friends, UserToFriends, JoinRequest
 from typing import List
+
+from friends.models import Friends, JoinRequest, UserToFriends
 
 
 class Generator:

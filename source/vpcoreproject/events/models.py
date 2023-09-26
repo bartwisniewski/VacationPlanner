@@ -1,14 +1,13 @@
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
-from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-
-from friends.models import Friends
-from places.models import Place
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+from django.forms import formset_factory
+from django.utils.translation import gettext_lazy as _
 from events.forms_for_models import UserEventsRoleForm
+from friends.models import Friends
 from members.models import Member
+from places.models import Place
 from users.models import FamilySize
 
 UserModel = get_user_model()

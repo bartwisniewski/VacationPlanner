@@ -1,9 +1,10 @@
 from abc import ABC
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.http import HttpResponseRedirect
 
 
 class SingleObjectUserRoleRequiredView(LoginRequiredMixin, UserPassesTestMixin):

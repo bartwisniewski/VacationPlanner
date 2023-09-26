@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+
 from places.forms import PlaceScrapForm
 from places.helpers import date_2_datetime
 

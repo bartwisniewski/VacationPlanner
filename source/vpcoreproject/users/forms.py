@@ -1,7 +1,7 @@
 from django import forms
-from django.forms import ModelForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UsernameField
+from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 from users.models import FamilySize, MyUser
 

@@ -1,10 +1,8 @@
-from django.db import models
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib import messages
+from django.db import models
 from django.db.models import Q
-
-
 from events.models import Event
 from friends.models import Friends
 

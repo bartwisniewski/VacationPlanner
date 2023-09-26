@@ -1,8 +1,7 @@
 from django import forms
-from django.forms import ModelForm, Form
-
-from places.models import Place, Owner, PlaceSize
+from django.forms import Form, ModelForm
 from places.helpers import get_field_value_from_related_object
+from places.models import Owner, Place, PlaceSize
 from users.forms import FamilySizeForm
 
 

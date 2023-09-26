@@ -1,8 +1,7 @@
+from chat.views import ChatMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
-
 from events.models import Event
-from chat.views import ChatMixin
 
 
 class MyEventsListView(LoginRequiredMixin, ListView, ChatMixin):

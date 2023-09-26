@@ -1,7 +1,6 @@
-from users.tests.data import users
-from friends.tests.data import friends
 from events.models import Event, UserToEvent
-
+from friends.tests.data import friends
+from users.tests.data import users
 
 # class EventStatus(models.IntegerChoices):
 #     DATE_SELECTION = 0, _("Date selection")

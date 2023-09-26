@@ -1,12 +1,11 @@
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.contrib import messages
 from django.views.generic import TemplateView
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
-
-from friends.models import Friends, UserToFriends, JoinRequest
+from friends.models import Friends, JoinRequest, UserToFriends
 
 
 class FriendsFindView(LoginRequiredMixin, ListView):

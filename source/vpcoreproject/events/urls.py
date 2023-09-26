@@ -1,12 +1,12 @@
 from django.urls import path
 from events.views import (
-    event_list_views,
-    event_detail_views,
-    join_leave_views,
-    event_manipulate_views,
-    date_proposal_views,
-    place_proposal_views,
     booking_confirmation_views,
+    date_proposal_views,
+    event_detail_views,
+    event_list_views,
+    event_manipulate_views,
+    join_leave_views,
+    place_proposal_views,
 )
 
 urlpatterns = [

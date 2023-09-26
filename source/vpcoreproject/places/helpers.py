@@ -1,5 +1,6 @@
-from django.db.models import Model
 from datetime import date, datetime
+
+from django.db.models import Model
 
 
 def get_field_value_from_related_object(

@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-
-from users.tests.mixins import LoginRequiredViewTest
 from friends.models import Friends, UserToFriends
+from users.tests.mixins import LoginRequiredViewTest
 
 
 class FriendsCreateViewTest(LoginRequiredViewTest, TestCase):

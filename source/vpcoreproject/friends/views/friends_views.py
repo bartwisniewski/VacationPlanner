@@ -1,14 +1,13 @@
+from chat.views import ChatMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-
-from chat.views import ChatMixin
-from friends.models import Friends, UserToFriends, JoinRequest
+from django.views.generic.list import ListView
 from friends.helpers import UserToFriendsUpdateManager
+from friends.models import Friends, JoinRequest, UserToFriends
 from members.helpers import SingleObjectUserRoleRequiredView, owner_only
 
 

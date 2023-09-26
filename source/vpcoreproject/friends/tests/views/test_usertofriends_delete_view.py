@@ -1,12 +1,11 @@
 from http import HTTPStatus
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 from django.urls import reverse
-from django.core.exceptions import ObjectDoesNotExist
-
-from users.tests.mixins import LoginRequiredViewTest
-from friends.tests.data import Generator
 from friends.models import UserToFriends
+from friends.tests.data import Generator
+from users.tests.mixins import LoginRequiredViewTest
 
 
 class UserToFriendsDeleteViewTest(LoginRequiredViewTest, TestCase):

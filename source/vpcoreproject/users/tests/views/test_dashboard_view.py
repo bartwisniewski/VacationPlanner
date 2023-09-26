@@ -1,7 +1,7 @@
-from django.test import TestCase, Client
 from http import HTTPStatus
-from django.urls import reverse
 
+from django.test import Client, TestCase
+from django.urls import reverse
 from users.tests.data import UserGenerator
 
 

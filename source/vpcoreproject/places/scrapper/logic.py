@@ -1,9 +1,10 @@
-import requests
 import os
+
+import requests
+from places.forms import PlaceScrapForm
 from places.scrapper import celery_states
 from places.scrapper.schemas import Query
 from places.scrapper.serializers import QuerySerializer
-from places.forms import PlaceScrapForm
 
 
 def url():

@@ -1,13 +1,11 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import View, TemplateView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.views.generic import TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView
-
-
-from events.models import DateProposal, DateProposalVote, Event, UserToEvent
 from events.forms import DateProposalForm
+from events.models import DateProposal, DateProposalVote, Event, UserToEvent
 
 
 class DateProposalCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

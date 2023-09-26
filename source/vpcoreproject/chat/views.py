@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from chat.models import Chat, EventChat, FriendsChat
+from django.shortcuts import render
 
 
 def chat_box_standalone_view(request, chat_id):

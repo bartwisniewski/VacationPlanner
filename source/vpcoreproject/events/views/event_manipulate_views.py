@@ -1,14 +1,13 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
-from events.models import Event, UserToEvent, PlaceProposal
-from friends.models import Friends
-
-from members.helpers import SingleObjectUserRoleRequiredView, owner_only
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from events.helpers import UserToEventUpdateManager
+from events.models import Event, PlaceProposal, UserToEvent
+from friends.models import Friends
+from members.helpers import SingleObjectUserRoleRequiredView, owner_only
 
 
 class EventCreateView(LoginRequiredMixin, CreateView):

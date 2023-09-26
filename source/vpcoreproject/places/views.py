@@ -1,21 +1,18 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import TemplateView
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
+from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
+from django.views.generic.list import ListView
+from events.models import Event, PlaceProposal, UserToEvent
 from places.forms import PlaceForm, PlaceScrapForm
-from places.scrapper import logic as scrapper_logic
 from places.models import Place, PlaceScrap
-from events.models import Event, UserToEvent, PlaceProposal
+from places.scrapper import logic as scrapper_logic
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class MyPlacesListView(LoginRequiredMixin, ListView):

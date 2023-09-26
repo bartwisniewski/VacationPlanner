@@ -1,14 +1,12 @@
-from django.contrib.auth import login, get_user_model
+from chat.views import ChatMixin
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, View
-
-from chat.views import ChatMixin
 from events.models import Event
-from users.forms import MyUserCreationForm, MyUserUpdateForm, FamilySizeForm
+from users.forms import FamilySizeForm, MyUserCreationForm, MyUserUpdateForm
 from users.helpers import get_modelform_data_from_post
-
 
 User = get_user_model()
 
@@ -26,7 +24,11 @@ class DashboardView(TemplateView, ChatMixin):
                 .filter(status__lt=4)
                 .order_by("-id")
             )
-
+            context["friends"] = (
+                Friends.filter_by_user(self.request.user)
+                .filter(status__lt=4)
+                .order_by("-id")
+            )
         return self.render_to_response(context)
 
 

@@ -1,7 +1,7 @@
-from django.test import Client
 from http import HTTPStatus
 
 from django.conf import settings
+from django.test import Client
 from users.tests.data import UserGenerator
 
 

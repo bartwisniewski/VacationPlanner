@@ -1,6 +1,6 @@
+from django.db.models import Model, Q
 from events.models import UserToEvent
 from members.helpers import MembersUpdateManager
-from django.db.models import Q, Model
 
 
 class UserToEventUpdateManager(MembersUpdateManager):
