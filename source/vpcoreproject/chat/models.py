@@ -88,6 +88,14 @@ class EventChat(models.Model):
         return None
 
     @staticmethod
+    def get_or_create(parent_object):
+        try:
+            return EventChat.objects.get(event=parent_object)
+        except ObjectDoesNotExist:
+            new_chat = Chat.objects.create()
+            return EventChat.objects.create(event=parent_object, chat=new_chat)
+
+    @staticmethod
     def filter_by_parent_object(parent_object_list):
         return EventChat.objects.filter(event__in=parent_object_list)
 
@@ -115,6 +123,14 @@ class FriendsChat(models.Model):
                 request, f"FriendsChat of Friends group {parent_object} does not exist"
             )
         return None
+
+    @staticmethod
+    def get_or_create(parent_object):
+        try:
+            return FriendsChat.objects.get(event=parent_object)
+        except ObjectDoesNotExist:
+            new_chat = Chat.objects.create()
+            return FriendsChat.objects.create(friends=parent_object, chat=new_chat)
 
     @staticmethod
     def filter_by_parent_object(parent_object_list):

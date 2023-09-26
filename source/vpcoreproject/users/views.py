@@ -1,15 +1,14 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, View
 
-from django.http import HttpResponseRedirect
-
+from chat.views import ChatMixin
+from events.models import Event
 from users.forms import MyUserCreationForm, MyUserUpdateForm, FamilySizeForm
 from users.helpers import get_modelform_data_from_post
 
-from chat.views import ChatMixin
 
 User = get_user_model()
 
@@ -22,6 +21,12 @@ class DashboardView(TemplateView, ChatMixin):
         if request.user.is_authenticated:
             context["joined"] = request.user.date_joined.strftime("%m/%d/%Y")
             self.add_chat_context(context, self.request)
+            context["events"] = (
+                Event.filter_by_user(self.request.user)
+                .filter(status__lt=4)
+                .order_by("-id")
+            )
+
         return self.render_to_response(context)
 
 

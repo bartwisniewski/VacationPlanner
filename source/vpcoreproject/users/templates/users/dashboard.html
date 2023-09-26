@@ -6,14 +6,13 @@ Welcome page
 <div class="section">
     <div class="columns">
         <div class="column is-10">
+          {% if user.is_authenticated %}
+            {% include 'users/dashboard_user.html' %}
+          {% else %}
             <div class="box">
-              {% if user.is_authenticated %}
-                <h1>Hi {{user.username}}</h1>
-                <h2>You’ve been with us since the: {{joined}} </h2>
-              {% else %}
                 <h1>Welcome stranger, please log in</h1>
-              {% endif %}
             </div>
+          {% endif %}
         </div>
         <div class="column">
             {% include 'chat/chat.html' %}

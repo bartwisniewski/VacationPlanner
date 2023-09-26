@@ -16,8 +16,8 @@ My events
                         <li><span>
                                 <a href="{% url 'event-detail' event.id %}">
                                     <span class="mr-1">{{event.friends}}:</span>
-                                    <span>{{ event.name }}</span>
-                                    <span>:{{ status_display }}</span>
+                                    <span>{{ event.name }}:</span>
+                                    <span>{{ event.get_status_display }}</span>
                                 </a>
                             </span>
                             <span>

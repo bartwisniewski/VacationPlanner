@@ -1,0 +1,20 @@
+<div class="box">
+    <h1>Hi {{user.username}}</h1>
+</div>
+{% if events %}
+    <div class="box">
+        <h2>My active events:</h2>
+        <ul>
+            {% for event in events %}
+                <li><span>
+                        <a href="{% url 'event-detail' event.id %}">
+                            <span class="mr-1">{{event.friends}}:</span>
+                            <span>{{ event.name }}:</span>
+                            <span>{{ event.get_status_display }}</span>
+                        </a>
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

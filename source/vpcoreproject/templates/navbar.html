@@ -42,7 +42,7 @@
       <div class="navbar-item">
         <div class="buttons">
           {% if user.is_authenticated %}
-            <span class="mr-1">Welcome, {{ user.get_username }}. You can use the app now. </span>
+            <span class="mr-2">Welcome, {{ user.get_username }} </span>
             <a class="is-link" href="{% url 'logout' %}">Logout</a>
           {% else %}
             <a class="button is-primary" href="{% url 'register' %}">

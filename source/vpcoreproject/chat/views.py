@@ -96,7 +96,7 @@ class SingleObjectChatData(ChatDataGenerator):
 
     def get_chat(self, request):
         chat_parent = self.view.object
-        chat_object = self.view.chat_model.get_or_warning(chat_parent, request)
+        chat_object = self.view.chat_model.get_or_create(chat_parent)
         return chat_object.chat
 
 
