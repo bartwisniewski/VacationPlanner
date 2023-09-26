@@ -5,6 +5,7 @@
 * [Architecture](#architecture)
 * [Diagrams](#diagrams)
 * [How to run](#how-to-run)
+* [Kubernetes](#kubernetes)
 * [Testing](#testing)
 * [Deployment](#deployment)
 * [CI CD](#ci-cd)
@@ -45,6 +46,8 @@ Application will be used to arrange vacations for a group of friends. The main p
 <li>Selenium</li>
 <li>Redis</li>
 <li>Docker</li>
+<li>Kubernetes / Minikube</li>
+<li>Helm</li>
 <li>AWS</li>
 </ul>
 
@@ -105,6 +108,10 @@ run docker compose for both repositories:
 
 open in a browser:
 http://127.0.0.1:8001
+
+## Kubernetes
+For the core part of the project I have also prepared helm charts and tested deployment on Kubernetes (Minikube running locally on Docker)
+Chart available here: https://github.com/bartwisniewski/VacationPlanner/tree/main/deployment/minikube/vpcore
 
 ## Testing
 As this is a portfolio project, not a real production application project is not fully covered with testing. To show possiblities I have prepared tests for 1 django app: "Friends"
