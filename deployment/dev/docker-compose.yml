@@ -1,52 +1,53 @@
+version: '3.9'
+name: vacation-planner
 services:
-  core:
+  app:
     build:
       context: ../../source
       dockerfile: Dockerfile
-    container_name: ${CORE_NAME}
+    container_name: "vp-app"
+    volumes:
+      - ../../source/vpcoreproject/:/app/
+      - static:/app/static
+      - media:/app/media/
     environment:
       - DJANGO_SETTINGS_MODULE=vpcoreproject.settings
-      - ALLOWED_HOSTS=${CORE_ALLOWED_HOSTS}
-      - CORE_HOST_NAME=${CORE_NAME}
-      - CORE_PORT=${CORE_PORT}
-      - DB_ENGINE=${CORE_DB_ENGINE}
-      - DB_HOST=${CORE_DB_NAME}
-      - DB_DB=${POSTGRES_DB}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - HOST_NAME=http://localhost:8000
+      - DB_ENGINE=django.db.backends.postgresql_psycopg2
+      - DB_HOST=vp-db
+      - DB_DB=postgres
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_PORT=${POSTGRES_PORT}
-      - SCRAPPER_HOST=scrapper
-      - SCRAPPER_PORT=8002
+      - DB_PORT=5432
     entrypoint: [ "/bin/sh", "-c" ]
     command:
       - |
         python3 manage.py makemigrations
         python3 manage.py migrate
-        python3 manage.py runserver 0.0.0.0:${CORE_PORT}
-    volumes:
-      - ../../source/vpcoreproject/:/app/
+        python3 manage.py collectstatic --noinput
+        python3 manage.py runserver 0.0.0.0:8000
     healthcheck:
-      test: curl --fail http://0.0.0.0:${CORE_PORT}/ || exit 1
+      test: curl --fail http://0.0.0.0:8000/ || exit 1
       interval: 40s
       timeout: 30s
       retries: 3
       start_period: 60s
     depends_on:
-      core-db:
+      db:
         condition: service_healthy
     networks:
       - network_back
-      - network_scrapper
 
-  core-db:
+  db:
     image: postgres:13
-    container_name: ${CORE_DB_NAME}
+    container_name: "vp-db"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=postgres
     healthcheck:
-      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      test: pg_isready -U ${POSTGRES_USER} -d postgres
       interval: 10s
       timeout: 3s
       retries: 3
@@ -60,15 +61,18 @@ services:
       context: ../../nginx/local
       dockerfile: Dockerfile
     environment:
-      - CORE_HOST_NAME=${CORE_NAME}
-      - CORE_PORT=${CORE_PORT}
+      - APP_HOST_NAME=vp-app
+      - APP_PORT=8000
+    volumes:
+      - static:/home/app/web/staticfiles
+      - media:/home/app/web/mediafiles
     ports:
       - "8001:80"
     networks:
       - network_front
       - network_back
     depends_on:
-      - core
+      - app
 
 networks:
   network_front:
@@ -78,9 +82,8 @@ networks:
     driver: bridge
     internal: true
     name: core_network_back
-  network_scrapper:
-    name: scrapper_network_front
-    external: True
 
 volumes:
+  static:
+  media:
   core-postgres-vol:
