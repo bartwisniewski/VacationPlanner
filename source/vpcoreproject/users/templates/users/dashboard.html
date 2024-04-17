@@ -1,23 +1,21 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-Welcome page
+{% translate "Vacation Planner: Dashboard" %}
 {% endblock %}
 {% block content %}
-<div class="section">
-    <div class="columns">
-        <div class="column is-10">
+<div class="section hero is-fullheight">
           {% if user.is_authenticated %}
             {% include 'users/dashboard_user.html' %}
+                <div class="column">
+            {% include 'chat/chat.html' %}
+            </div>
           {% else %}
-            <div class="box">
-                <h1>Welcome stranger, please log in</h1>
+            <div class="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-center is-align-items-center pb-6">
+                <a class="button p-6" href="{% url 'login' %}">{% translate "Log in" %}</a>
+                <p class="mt-4 has-text-weight-light">{% translate "Please log in" %}</p>
             </div>
           {% endif %}
-        </div>
-        <div class="column">
-            {% include 'chat/chat.html' %}
-        </div>
-    </div>
 </div>
 {% endblock %}
 {% block scripts %}
