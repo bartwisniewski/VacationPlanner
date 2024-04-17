@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, View
 from events.models import Event
+from friends.models import Friends
 from users.forms import FamilySizeForm, MyUserCreationForm, MyUserUpdateForm
 from users.helpers import get_modelform_data_from_post
 
@@ -24,10 +25,8 @@ class DashboardView(TemplateView, ChatMixin):
                 .filter(status__lt=4)
                 .order_by("-id")
             )
-            context["friends"] = (
-                Friends.filter_by_user(self.request.user)
-                .filter(status__lt=4)
-                .order_by("-id")
+            context["friends"] = Friends.filter_by_user(self.request.user).order_by(
+                "-id"
             )
         return self.render_to_response(context)
 
