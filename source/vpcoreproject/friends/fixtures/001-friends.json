@@ -1,0 +1,15 @@
+[
+{
+    "model": "friends.friends",
+    "pk": 1,
+    "fields": {
+        "nickname": "My friends group 1"
+    }
+}, {
+    "model": "friends.friends",
+    "pk": 2,
+    "fields": {
+        "nickname": "My friends group 2"
+    }
+}
+]

@@ -1,0 +1,57 @@
+[
+{
+    "model": "friends.usertofriends",
+    "pk": 1,
+    "fields": {
+        "friends": 1,
+        "user": 2,
+        "admin": true,
+        "owner": true
+    }
+}, {
+    "model": "friends.usertofriends",
+    "pk": 2,
+    "fields": {
+        "friends": 1,
+        "user": 3,
+        "admin": true,
+        "owner": false
+    }
+}, {
+    "model": "friends.usertofriends",
+    "pk": 3,
+    "fields": {
+        "friends": 1,
+        "user": 4,
+        "admin": false,
+        "owner": false
+    }
+}, {
+    "model": "friends.usertofriends",
+    "pk": 4,
+    "fields": {
+        "friends": 2,
+        "user": 3,
+        "admin": true,
+        "owner": true
+    }
+}, {
+    "model": "friends.usertofriends",
+    "pk": 5,
+    "fields": {
+        "friends": 2,
+        "user": 4,
+        "admin": true,
+        "owner": false
+    }
+}, {
+    "model": "friends.usertofriends",
+    "pk": 6,
+    "fields": {
+        "friends": 2,
+        "user": 5,
+        "admin": false,
+        "owner": false
+    }
+}
+]

@@ -1,0 +1,17 @@
+[
+{
+    "model": "friends.joinrequest",
+    "pk": 1,
+    "fields": {
+        "user": 5,
+        "friends": 1
+        }
+}, {
+    "model": "friends.joinrequest",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "friends": 2
+        }
+}
+]

@@ -3,8 +3,8 @@ name: vacation-planner
 services:
   app:
     build:
-      context: ../../source
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: ./deployment/dev/Dockerfile
     container_name: "vp-app"
     volumes:
       - ../../source/vpcoreproject/:/app/
@@ -23,10 +23,11 @@ services:
     entrypoint: [ "/bin/sh", "-c" ]
     command:
       - |
-        python3 manage.py makemigrations
-        python3 manage.py migrate
-        python3 manage.py collectstatic --noinput
-        python3 manage.py runserver 0.0.0.0:8000
+        python manage.py makemigrations
+        python manage.py migrate
+        python manage.py load_fixtures
+        python manage.py collectstatic --noinput
+        python manage.py runserver 0.0.0.0:8000
     healthcheck:
       test: curl --fail http://0.0.0.0:8000/ || exit 1
       interval: 40s

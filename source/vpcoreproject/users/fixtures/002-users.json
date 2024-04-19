@@ -1,0 +1,77 @@
+[
+{
+    "model": "users.myuser",
+    "pk": 2,
+    "fields": {
+        "password": "secret",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "user_1",
+        "first_name": "Scott",
+        "last_name": "Thomas",
+        "email": "user_1@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-12-07T17:03:30.159Z",
+        "default_family": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.myuser",
+    "pk": 3,
+    "fields": {
+        "password": "secret",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "user_2",
+        "first_name": "Bart",
+        "last_name": "Wisn",
+        "email": "user_2@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-12-07T17:03:30.159Z",
+        "default_family": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.myuser",
+    "pk": 4,
+    "fields": {
+        "password": "secret",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "user_3",
+        "first_name": "Adu",
+        "last_name": "Min",
+        "email": "user_3@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-12-07T17:03:30.159Z",
+        "default_family": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.myuser",
+    "pk": 5,
+    "fields": {
+        "password": "secret",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "user_4",
+        "first_name": "Bin",
+        "last_name": "Maj",
+        "email": "user_4@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-12-07T17:03:30.159Z",
+        "default_family": null,
+        "groups": [],
+        "user_permissions": []
+    }
+}]
