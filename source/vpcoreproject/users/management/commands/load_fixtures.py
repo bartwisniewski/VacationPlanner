@@ -26,24 +26,46 @@ def disable_signals_for_loaddata(signal_handler):
 
 
 class Command(BaseCommand):
-    """Django command to create a super user and add dummy data"""
+    """Django command to load fixtures and create superuser if not exists"""
 
-    help = "Create a new superuser"
+    help = "Load data from fixtures"
+
+    def create_superuser(self):
+        self.stdout.write("Creating superuser")
+        os.system(
+            f"python manage.py loaddata users/fixtures/superuser/001-superuser.json"
+        )
+        for superuser in User.objects.filter(is_superuser=True):
+            superuser.set_password(superuser.password)
+            superuser.save()
+
+    @staticmethod
+    def get_last_user_id():
+        latest_user = User.objects.all().order_by("-id").first()
+        return latest_user.id if latest_user else None
+
+    @staticmethod
+    def set_new_users_password(latest_old_id):
+        new_users = User.objects.all()
+        if latest_old_id:
+            new_users = new_users.filter(id__gt=latest_old_id)
+        for user in new_users:
+            user.set_password(user.password)
+            user.save()
 
     @disable_signals_for_loaddata
     def handle(self, *args, **kwargs):
         """Entrypoint for command."""
         self.stdout.write("Loading ")
         if not User.objects.filter(is_superuser=True):
-            self.stdout.write("Creating users")
-            os.system(f"python manage.py loaddata users/fixtures/*.json")
-            for user in User.objects.all():
-                user.set_password(user.password)
-                user.save()
+            self.create_superuser()
         else:
             self.stdout.write(self.style.SUCCESS("Superuser exists"))
 
+        latest_old_id = self.get_last_user_id()
         self.stdout.write("Importing data from fixtures")
-        apps = ["friends"]
+        apps = ["users", "friends"]
         fixture_full_paths = [f"{app}/fixtures/*.json" for app in apps]
         os.system(f"python manage.py loaddata {' '.join(fixture_full_paths)}")
+
+        self.set_new_users_password(latest_old_id=latest_old_id)
